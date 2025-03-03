@@ -1,32 +1,83 @@
 import 'package:flutter/material.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'firebase_options.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:url_launcher/url_launcher.dart';
+import 'login.dart';
+import 'signup.dart';
+import 'profile.dart';  // Added Profile Page
+import 'package:firebase_app_check/firebase_app_check.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
+
+  // Enable Firebase App Check
+  await FirebaseAppCheck.instance.activate(
+    androidProvider: AndroidProvider.playIntegrity, // For real device
+    // Use AndroidProvider.debug for emulator testing
+  );
+
   runApp(const MyApp());
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends StatefulWidget {
   const MyApp({super.key});
+
+  @override
+  _MyAppState createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
+  bool _isDarkMode = false;
+
+  void _toggleTheme() {
+    setState(() {
+      _isDarkMode = !_isDarkMode;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'PAPERCHASE',
-      theme: ThemeData(primarySwatch: Colors.blue),
+      theme: ThemeData(
+        brightness: Brightness.light,
+        primarySwatch: Colors.blue,
+        textTheme: const TextTheme(
+          bodyLarge: TextStyle(color: Colors.black),
+          bodyMedium: TextStyle(color: Colors.black),
+        ),
+      ),
+      darkTheme: ThemeData(
+        brightness: Brightness.dark,
+        primarySwatch: Colors.blue,
+        textTheme: const TextTheme(
+          bodyLarge: TextStyle(color: Colors.white),
+          bodyMedium: TextStyle(color: Colors.white),
+        ),
+      ),
+      themeMode: _isDarkMode ? ThemeMode.dark : ThemeMode.light,
       initialRoute: '/',
       routes: {
-        '/': (context) => const HomePage(),
+        '/': (context) => HomePage(toggleTheme: _toggleTheme, isDarkMode: _isDarkMode),
         '/login': (context) => const LoginPage(),
         '/signup': (context) => const SignupPage(),
+        '/profile': (context) => const ProfilePage(),  // Profile Page Route
       },
     );
   }
 }
 
 class HomePage extends StatefulWidget {
-  const HomePage({super.key});
+  final VoidCallback toggleTheme;
+  final bool isDarkMode;
+
+  const HomePage({super.key, required this.toggleTheme, required this.isDarkMode});
 
   @override
   _HomePageState createState() => _HomePageState();
@@ -35,13 +86,38 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   final TextEditingController _searchController = TextEditingController();
   List<dynamic> _books = [];
+  bool _isLoggedIn = false;
+  User? _user;
+
+  @override
+  void initState() {
+    super.initState();
+    _checkUserLoginStatus();
+  }
+
+  void _checkUserLoginStatus() {
+    FirebaseAuth.instance.authStateChanges().listen((User? user) {
+      setState(() {
+        _isLoggedIn = user != null;
+        _user = user;
+      });
+    });
+  }
+
+  Future<void> _logout() async {
+    await FirebaseAuth.instance.signOut();
+    setState(() {
+      _isLoggedIn = false;
+    });
+    Navigator.of(context).pushNamedAndRemoveUntil('/', (route) => false);
+  }
 
   Future<void> _searchBooks() async {
     final query = _searchController.text;
     if (query.isEmpty) return;
 
     final url = Uri.parse(
-        'https://www.googleapis.com/books/v1/volumes?q=${Uri.encodeComponent(query)}&key=AIzaSyDb5q3iuyyhJh0yeD4cprHduShcuRmAco8');
+        'https://www.googleapis.com/books/v1/volumes?q=${Uri.encodeComponent(query)}');
 
     try {
       final response = await http.get(url);
@@ -60,15 +136,42 @@ class _HomePageState extends State<HomePage> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('PAPERCHASE'),
+        leading: _isLoggedIn
+            ? PopupMenuButton<String>(
+          onSelected: (value) {
+            if (value == 'logout') {
+              _logout();
+            } else if (value == 'profile') {
+              Navigator.pushNamed(context, '/profile');
+            }
+          },
+          itemBuilder: (BuildContext context) => [
+            const PopupMenuItem(
+              value: 'profile',
+              child: Text('Profile'),
+            ),
+            const PopupMenuItem(
+              value: 'logout',
+              child: Text('Logout'),
+            ),
+          ],
+        )
+            : null,
         actions: [
-          TextButton(
-            onPressed: () => Navigator.pushNamed(context, '/login'),
-            child: const Text('Login', style: TextStyle(color: Colors.white)),
+          IconButton(
+            icon: const Icon(Icons.brightness_6),
+            onPressed: widget.toggleTheme,
           ),
-          TextButton(
-            onPressed: () => Navigator.pushNamed(context, '/signup'),
-            child: const Text('Sign Up', style: TextStyle(color: Colors.white)),
-          ),
+          if (!_isLoggedIn) ...[
+            TextButton(
+              onPressed: () => Navigator.pushNamed(context, '/login'),
+              child: Text('Login', style: TextStyle(color: widget.isDarkMode ? Colors.white : Colors.black)),
+            ),
+            TextButton(
+              onPressed: () => Navigator.pushNamed(context, '/signup'),
+              child: Text('Sign Up', style: TextStyle(color: widget.isDarkMode ? Colors.white : Colors.black)),
+            ),
+          ],
         ],
       ),
       body: Padding(
@@ -114,65 +217,6 @@ class _HomePageState extends State<HomePage> {
               ),
             ),
           ],
-        ),
-      ),
-    );
-  }
-}
-
-class LoginPage extends StatelessWidget {
-  const LoginPage({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: const Text('Login')),
-      body: Center(
-        child: Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              TextField(decoration: const InputDecoration(labelText: 'Email')),
-              TextField(decoration: const InputDecoration(labelText: 'Password'), obscureText: true),
-              const SizedBox(height: 20),
-              ElevatedButton(onPressed: () {}, child: const Text('Login')),
-              TextButton(
-                onPressed: () => Navigator.pushNamed(context, '/signup'),
-                child: const Text("Don't have an account? Sign Up"),
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-}
-
-class SignupPage extends StatelessWidget {
-  const SignupPage({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: const Text('Sign Up')),
-      body: Center(
-        child: Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              TextField(decoration: const InputDecoration(labelText: 'Full Name')),
-              TextField(decoration: const InputDecoration(labelText: 'Email')),
-              TextField(decoration: const InputDecoration(labelText: 'Password'), obscureText: true),
-              const SizedBox(height: 20),
-              ElevatedButton(onPressed: () {}, child: const Text('Sign Up')),
-              TextButton(
-                onPressed: () => Navigator.pushNamed(context, '/login'),
-                child: const Text("Already have an account? Login"),
-              ),
-            ],
-          ),
         ),
       ),
     );

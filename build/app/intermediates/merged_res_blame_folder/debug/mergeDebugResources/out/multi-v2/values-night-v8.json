@@ -1,10 +1,10 @@
 {
     "logs": [
         {
-            "outputFile": "com.example.paperchase_app-mergeDebugResources-25:/values-night-v8/values-night-v8.xml",
+            "outputFile": "com.example.paperchase_app-mergeDebugResources-33:/values-night-v8/values-night-v8.xml",
             "map": [
                 {
-                    "source": "I:\\CSC190 Project\\paperchase_app\\android\\app\\src\\main\\res\\values-night\\styles.xml",
+                    "source": "/Users/abdallah/Desktop/CSC190/PaperChase-main/android/app/src/main/res/values-night/styles.xml",
                     "from": {
                         "startLines": "3,14",
                         "startColumns": "4,4",

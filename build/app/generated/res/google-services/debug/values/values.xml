@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="default_web_client_id" translatable="false">1098757513078-c2l1icfb8jt1u8k3tkdkbil7pgej46qg.apps.googleusercontent.com</string>
+    <string name="gcm_defaultSenderId" translatable="false">1098757513078</string>
+    <string name="google_api_key" translatable="false">AIzaSyDVzhSFOFzVuSfo953jOTkMg2z-pAN2o74</string>
+    <string name="google_app_id" translatable="false">1:1098757513078:android:504aff2e25702dd4f3a457</string>
+    <string name="google_crash_reporting_api_key" translatable="false">AIzaSyDVzhSFOFzVuSfo953jOTkMg2z-pAN2o74</string>
+    <string name="google_storage_bucket" translatable="false">paperchase-7ad1d.firebasestorage.app</string>
+    <string name="project_id" translatable="false">paperchase-7ad1d</string>
+</resources>

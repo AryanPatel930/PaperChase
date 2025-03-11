@@ -4,7 +4,7 @@
             "outputFile": "com.example.paperchase_app-mergeDebugResources-33:/values-en-rCA/values-en-rCA.xml",
             "map": [
                 {
-                    "source": "/Users/abdallah/.gradle/caches/8.10.2/transforms/7f46bbd13206153774356ca6103aa890/transformed/core-1.13.1/res/values-en-rCA/values-en-rCA.xml",
+                    "source": "C:\\Users\\allie\\.gradle\\caches\\8.10.2\\transforms\\417e7c87884e08d4d7995f4b5128db34\\transformed\\core-1.13.1\\res\\values-en-rCA\\values-en-rCA.xml",
                     "from": {
                         "startLines": "2,3,4,5,6,7,8,9",
                         "startColumns": "4,4,4,4,4,4,4,4",
@@ -21,7 +21,7 @@
                     }
                 },
                 {
-                    "source": "/Users/abdallah/.gradle/caches/8.10.2/transforms/847a26655a62540eb6e1b568482ff8fb/transformed/jetified-credentials-1.2.0-rc01/res/values-en-rCA/values-en-rCA.xml",
+                    "source": "C:\\Users\\allie\\.gradle\\caches\\8.10.2\\transforms\\b8e2387ce6d13c96e7fdc6f200d1522c\\transformed\\jetified-credentials-1.2.0-rc01\\res\\values-en-rCA\\values-en-rCA.xml",
                     "from": {
                         "startLines": "2,3",
                         "startColumns": "4,4",
@@ -31,7 +31,7 @@
                     }
                 },
                 {
-                    "source": "/Users/abdallah/.gradle/caches/8.10.2/transforms/1a36ee1e87beff061ef9f2c053c4f171/transformed/browser-1.8.0/res/values-en-rCA/values-en-rCA.xml",
+                    "source": "C:\\Users\\allie\\.gradle\\caches\\8.10.2\\transforms\\bc667669ce1f29fd40e2c0b9971447a9\\transformed\\browser-1.8.0\\res\\values-en-rCA\\values-en-rCA.xml",
                     "from": {
                         "startLines": "2,3,4,5",
                         "startColumns": "4,4,4,4",

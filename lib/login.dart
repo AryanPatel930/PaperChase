@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'forgot_password.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -59,9 +60,15 @@ class _LoginPageState extends State<LoginPage> {
                 validator: (value) => value!.isEmpty ? "Enter your password" : null,
               ),
               TextButton(
-                onPressed: () {}, // TODO: Implement password reset
-                child: const Text("Forgot Password?", style: TextStyle(color: Colors.blue)),
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => ForgotPasswordPage()),
+                  );
+                },
+                child: Text("Forgot Password?"),
               ),
+
               const SizedBox(height: 20),
               _isLoading
                   ? const CircularProgressIndicator()

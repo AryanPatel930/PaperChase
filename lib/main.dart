@@ -7,7 +7,9 @@ import 'dart:convert';
 import 'package:url_launcher/url_launcher.dart';
 import 'login.dart';
 import 'signup.dart';
-import 'profile.dart';  // Added Profile Page
+import 'profile.dart';
+import 'post.dart';
+import 'inbox.dart';
 import 'package:firebase_app_check/firebase_app_check.dart';
 
 void main() async {
@@ -16,10 +18,8 @@ void main() async {
     options: DefaultFirebaseOptions.currentPlatform,
   );
 
-  // Enable Firebase App Check
   await FirebaseAppCheck.instance.activate(
-    androidProvider: AndroidProvider.playIntegrity, // For real device
-    // Use AndroidProvider.debug for emulator testing
+    androidProvider: AndroidProvider.playIntegrity,
   );
 
   runApp(const MyApp());
@@ -33,11 +33,11 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  bool _isDarkMode = false;
+  bool _isDarkMode = false; // Default to Light Mode
 
   void _toggleTheme() {
     setState(() {
-      _isDarkMode = !_isDarkMode;
+      _isDarkMode = !_isDarkMode; // Toggle between Light & Dark Mode
     });
   }
 
@@ -47,18 +47,22 @@ class _MyAppState extends State<MyApp> {
       title: 'PAPERCHASE',
       theme: ThemeData(
         brightness: Brightness.light,
-        primarySwatch: Colors.blue,
-        textTheme: const TextTheme(
-          bodyLarge: TextStyle(color: Colors.black),
-          bodyMedium: TextStyle(color: Colors.black),
+        scaffoldBackgroundColor: Colors.black,
+        appBarTheme: const AppBarTheme(backgroundColor: Colors.black),
+        bottomNavigationBarTheme: const BottomNavigationBarThemeData(
+          backgroundColor: Colors.black,
+          selectedItemColor: Colors.white,
+          unselectedItemColor: Colors.grey,
         ),
       ),
       darkTheme: ThemeData(
         brightness: Brightness.dark,
-        primarySwatch: Colors.blue,
-        textTheme: const TextTheme(
-          bodyLarge: TextStyle(color: Colors.white),
-          bodyMedium: TextStyle(color: Colors.white),
+        scaffoldBackgroundColor: Colors.cyan,
+        appBarTheme: const AppBarTheme(backgroundColor: Colors.white),
+        bottomNavigationBarTheme: const BottomNavigationBarThemeData(
+          backgroundColor: Colors.white,
+          selectedItemColor: Colors.black,
+          unselectedItemColor: Colors.grey,
         ),
       ),
       themeMode: _isDarkMode ? ThemeMode.dark : ThemeMode.light,
@@ -67,7 +71,9 @@ class _MyAppState extends State<MyApp> {
         '/': (context) => HomePage(toggleTheme: _toggleTheme, isDarkMode: _isDarkMode),
         '/login': (context) => const LoginPage(),
         '/signup': (context) => const SignupPage(),
-        '/profile': (context) => const ProfilePage(),  // Profile Page Route
+        '/profile': (context) => const ProfilePage(),
+        '/post': (context) => const PostPage(),
+        '/inbox': (context) => const InboxPage(),
       },
     );
   }
@@ -116,8 +122,7 @@ class _HomePageState extends State<HomePage> {
     final query = _searchController.text;
     if (query.isEmpty) return;
 
-    final url = Uri.parse(
-        'https://www.googleapis.com/books/v1/volumes?q=${Uri.encodeComponent(query)}');
+    final url = Uri.parse('https://www.googleapis.com/books/v1/volumes?q=${Uri.encodeComponent(query)}');
 
     try {
       final response = await http.get(url);
@@ -135,7 +140,7 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('PAPERCHASE'),
+        title: Image.asset('assets/logo.png', height: 40),
         leading: _isLoggedIn
             ? PopupMenuButton<String>(
           onSelected: (value) {
@@ -146,30 +151,24 @@ class _HomePageState extends State<HomePage> {
             }
           },
           itemBuilder: (BuildContext context) => [
-            const PopupMenuItem(
-              value: 'profile',
-              child: Text('Profile'),
-            ),
-            const PopupMenuItem(
-              value: 'logout',
-              child: Text('Logout'),
-            ),
+            const PopupMenuItem(value: 'profile', child: Text('Profile')),
+            const PopupMenuItem(value: 'logout', child: Text('Logout')),
           ],
         )
             : null,
         actions: [
           IconButton(
-            icon: const Icon(Icons.brightness_6),
+            icon: Icon(widget.isDarkMode ? Icons.wb_sunny : Icons.nightlight_round),
             onPressed: widget.toggleTheme,
           ),
           if (!_isLoggedIn) ...[
             TextButton(
               onPressed: () => Navigator.pushNamed(context, '/login'),
-              child: Text('Login', style: TextStyle(color: widget.isDarkMode ? Colors.white : Colors.black)),
+              child: Text('Login', style: TextStyle(color: widget.isDarkMode ? Colors.black : Colors.white)),
             ),
             TextButton(
               onPressed: () => Navigator.pushNamed(context, '/signup'),
-              child: Text('Sign Up', style: TextStyle(color: widget.isDarkMode ? Colors.white : Colors.black)),
+              child: Text('Sign Up', style: TextStyle(color: widget.isDarkMode ? Colors.black : Colors.white)),
             ),
           ],
         ],
@@ -218,6 +217,25 @@ class _HomePageState extends State<HomePage> {
             ),
           ],
         ),
+      ),
+      bottomNavigationBar: BottomNavigationBar(
+        backgroundColor: widget.isDarkMode ? Colors.white : Colors.black,
+        selectedItemColor: widget.isDarkMode ? Colors.black : Colors.white,
+        unselectedItemColor: Colors.grey,
+        items: const [
+          BottomNavigationBarItem(icon: Icon(Icons.home), label: "Home"),
+          BottomNavigationBarItem(icon: Icon(Icons.add), label: "Post"),
+          BottomNavigationBarItem(icon: Icon(Icons.mail), label: "Inbox"),
+        ],
+        onTap: (index) {
+          if (index == 0) {
+            Navigator.pushNamed(context, '/');
+          } else if (index == 1) {
+            Navigator.pushNamed(context, '/post');
+          } else if (index == 2) {
+            Navigator.pushNamed(context, '/inbox');
+          }
+        },
       ),
     );
   }

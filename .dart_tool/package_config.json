@@ -524,7 +524,11 @@
       "languageVersion": "3.7"
     }
   ],
+<<<<<<< HEAD
   "generated": "2025-03-11T17:13:55.169144Z",
+=======
+  "generated": "2025-03-14T22:47:13.694959Z",
+>>>>>>> 08727c91 (Footer and logo added)
   "generator": "pub",
   "generatorVersion": "3.7.0",
   "flutterRoot": "file:///C:/Users/allie/OneDrive/flutter_windows_3.24.2-stable/flutter",

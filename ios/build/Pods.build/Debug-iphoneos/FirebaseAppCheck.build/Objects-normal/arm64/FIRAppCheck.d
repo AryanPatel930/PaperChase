@@ -1,0 +1,28 @@
+dependencies: \
+  /Users/arbruck/Downloads/PaperChase/ios/build/Pods.build/Debug-iphoneos/FirebaseAppCheck.build/module.modulemap \
+  /Users/arbruck/Downloads/PaperChase/ios/Pods/FirebaseAppCheck/FirebaseAppCheck/Sources/Core/FIRAppCheck.m \
+  /Users/arbruck/Downloads/PaperChase/ios/Pods/FirebaseAppCheck/FirebaseAppCheck/Sources/Public/FirebaseAppCheck/FIRAppCheck.h \
+  /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS.sdk/System/Library/Frameworks/Foundation.framework/Modules/module.modulemap \
+  /Users/arbruck/Downloads/PaperChase/ios/build/Pods.build/Debug-iphoneos/AppCheckCore.build/module.modulemap \
+  /Users/arbruck/Downloads/PaperChase/ios/build/Pods.build/Debug-iphoneos/FirebaseAppCheckInterop.build/module.modulemap \
+  /Users/arbruck/Downloads/PaperChase/ios/build/Pods.build/Debug-iphoneos/GoogleUtilities.build/module.modulemap \
+  /Users/arbruck/Downloads/PaperChase/ios/Pods/FirebaseAppCheck/FirebaseAppCheck/Sources/Public/FirebaseAppCheck/FIRAppCheckErrors.h \
+  /Users/arbruck/Downloads/PaperChase/ios/Pods/FirebaseAppCheck/FirebaseAppCheck/Sources/Public/FirebaseAppCheck/FIRAppCheckProvider.h \
+  /Users/arbruck/Downloads/PaperChase/ios/Pods/FirebaseAppCheck/FirebaseAppCheck/Sources/Public/FirebaseAppCheck/FIRAppCheckProviderFactory.h \
+  /Users/arbruck/Downloads/PaperChase/ios/Pods/FirebaseAppCheck/FirebaseAppCheck/Sources/Core/Errors/FIRAppCheckErrorUtil.h \
+  /Users/arbruck/Downloads/PaperChase/ios/Pods/FirebaseAppCheck/FirebaseAppCheck/Sources/Core/FIRAppCheck+Internal.h \
+  /Users/arbruck/Downloads/PaperChase/ios/Pods/FirebaseAppCheck/FirebaseAppCheck/Sources/Core/FIRAppCheckLogger.h \
+  /Users/arbruck/Downloads/PaperChase/ios/Pods/FirebaseAppCheck/FirebaseCore/Extension/FirebaseCoreInternal.h \
+  /Users/arbruck/Downloads/PaperChase/ios/build/Pods.build/Debug-iphoneos/FirebaseCore.build/module.modulemap \
+  /Users/arbruck/Downloads/PaperChase/ios/Pods/FirebaseAppCheck/FirebaseCore/Extension/FIRAppInternal.h \
+  /Users/arbruck/Downloads/PaperChase/ios/Pods/FirebaseAppCheck/FirebaseCore/Extension/FIRComponent.h \
+  /Users/arbruck/Downloads/PaperChase/ios/Pods/FirebaseAppCheck/FirebaseCore/Extension/FIRComponentContainer.h \
+  /Users/arbruck/Downloads/PaperChase/ios/Pods/FirebaseAppCheck/FirebaseCore/Extension/FIRComponentType.h \
+  /Users/arbruck/Downloads/PaperChase/ios/Pods/FirebaseAppCheck/FirebaseCore/Extension/FIRHeartbeatLogger.h \
+  /Users/arbruck/Downloads/PaperChase/ios/Pods/FirebaseAppCheck/FirebaseCore/Extension/FIRLibrary.h \
+  /Users/arbruck/Downloads/PaperChase/ios/Pods/FirebaseAppCheck/FirebaseCore/Extension/FIRLogger.h \
+  /Users/arbruck/Downloads/PaperChase/ios/Pods/FirebaseAppCheck/FirebaseAppCheck/Sources/Core/FIRAppCheckSettings.h \
+  /Users/arbruck/Downloads/PaperChase/ios/Pods/FirebaseAppCheck/FirebaseAppCheck/Sources/Core/FIRAppCheckToken+Internal.h \
+  /Users/arbruck/Downloads/PaperChase/ios/Pods/FirebaseAppCheck/FirebaseAppCheck/Sources/Public/FirebaseAppCheck/FIRAppCheckToken.h \
+  /Users/arbruck/Downloads/PaperChase/ios/Pods/FirebaseAppCheck/FirebaseAppCheck/Sources/Core/FIRAppCheckTokenResult.h \
+  /Users/arbruck/Downloads/PaperChase/ios/Pods/FirebaseAppCheck/FirebaseAppCheck/Sources/Core/FIRInternalAppCheckProvider.h

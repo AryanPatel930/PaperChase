@@ -1,0 +1,35 @@
+dependencies: \
+  /Users/arbruck/Downloads/PaperChase/ios/Pods/FirebaseFirestoreInternal/Firestore/Protos/nanopb/google/firestore/v1/query.nanopb.cc \
+  /Users/arbruck/Downloads/PaperChase/ios/Pods/FirebaseFirestoreInternal/Firestore/Protos/nanopb/google/firestore/v1/query.nanopb.h \
+  /Users/arbruck/Downloads/PaperChase/ios/Pods/nanopb/pb.h \
+  /Users/arbruck/Downloads/PaperChase/ios/Pods/FirebaseFirestoreInternal/Firestore/Protos/nanopb/google/firestore/v1/document.nanopb.h \
+  /Users/arbruck/Downloads/PaperChase/ios/Pods/FirebaseFirestoreInternal/Firestore/Protos/nanopb/google/protobuf/struct.nanopb.h \
+  /Users/arbruck/Downloads/PaperChase/ios/Pods/FirebaseFirestoreInternal/Firestore/Protos/nanopb/google/protobuf/timestamp.nanopb.h \
+  /Users/arbruck/Downloads/PaperChase/ios/Pods/FirebaseFirestoreInternal/Firestore/Protos/nanopb/google/type/latlng.nanopb.h \
+  /Users/arbruck/Downloads/PaperChase/ios/Pods/FirebaseFirestoreInternal/Firestore/Protos/nanopb/google/protobuf/wrappers.nanopb.h \
+  /Users/arbruck/Downloads/PaperChase/ios/Pods/FirebaseFirestoreInternal/Firestore/core/src/nanopb/pretty_printing.h \
+  /Users/arbruck/Downloads/PaperChase/ios/build/Debug-iphoneos/abseil/absl.framework/Headers/strings/str_cat.h \
+  /Users/arbruck/Downloads/PaperChase/ios/build/Debug-iphoneos/abseil/absl.framework/Headers/base/attributes.h \
+  /Users/arbruck/Downloads/PaperChase/ios/build/Debug-iphoneos/abseil/absl.framework/Headers/base/config.h \
+  /Users/arbruck/Downloads/PaperChase/ios/build/Debug-iphoneos/abseil/absl.framework/Headers/base/options.h \
+  /Users/arbruck/Downloads/PaperChase/ios/build/Debug-iphoneos/abseil/absl.framework/Headers/base/policy_checks.h \
+  /Users/arbruck/Downloads/PaperChase/ios/build/Debug-iphoneos/abseil/absl.framework/Headers/base/nullability.h \
+  /Users/arbruck/Downloads/PaperChase/ios/build/Debug-iphoneos/abseil/absl.framework/Headers/base/internal/nullability_impl.h \
+  /Users/arbruck/Downloads/PaperChase/ios/build/Debug-iphoneos/abseil/absl.framework/Headers/meta/type_traits.h \
+  /Users/arbruck/Downloads/PaperChase/ios/build/Debug-iphoneos/abseil/absl.framework/Headers/base/port.h \
+  /Users/arbruck/Downloads/PaperChase/ios/build/Debug-iphoneos/abseil/absl.framework/Headers/base/optimization.h \
+  /Users/arbruck/Downloads/PaperChase/ios/build/Debug-iphoneos/abseil/absl.framework/Headers/strings/has_absl_stringify.h \
+  /Users/arbruck/Downloads/PaperChase/ios/build/Debug-iphoneos/abseil/absl.framework/Headers/strings/string_view.h \
+  /Users/arbruck/Downloads/PaperChase/ios/build/Debug-iphoneos/abseil/absl.framework/Headers/base/internal/throw_delegate.h \
+  /Users/arbruck/Downloads/PaperChase/ios/build/Debug-iphoneos/abseil/absl.framework/Headers/base/macros.h \
+  /Users/arbruck/Downloads/PaperChase/ios/build/Debug-iphoneos/abseil/absl.framework/Headers/strings/internal/resize_uninitialized.h \
+  /Users/arbruck/Downloads/PaperChase/ios/build/Debug-iphoneos/abseil/absl.framework/Headers/strings/internal/stringify_sink.h \
+  /Users/arbruck/Downloads/PaperChase/ios/build/Debug-iphoneos/abseil/absl.framework/Headers/strings/numbers.h \
+  /Users/arbruck/Downloads/PaperChase/ios/build/Debug-iphoneos/abseil/absl.framework/Headers/base/internal/endian.h \
+  /Users/arbruck/Downloads/PaperChase/ios/build/Debug-iphoneos/abseil/absl.framework/Headers/base/casts.h \
+  /Users/arbruck/Downloads/PaperChase/ios/build/Debug-iphoneos/abseil/absl.framework/Headers/base/internal/identity.h \
+  /Users/arbruck/Downloads/PaperChase/ios/build/Debug-iphoneos/abseil/absl.framework/Headers/base/internal/unaligned_access.h \
+  /Users/arbruck/Downloads/PaperChase/ios/build/Debug-iphoneos/abseil/absl.framework/Headers/numeric/bits.h \
+  /Users/arbruck/Downloads/PaperChase/ios/build/Debug-iphoneos/abseil/absl.framework/Headers/numeric/internal/bits.h \
+  /Users/arbruck/Downloads/PaperChase/ios/build/Debug-iphoneos/abseil/absl.framework/Headers/numeric/int128.h \
+  /Users/arbruck/Downloads/PaperChase/ios/build/Debug-iphoneos/abseil/absl.framework/Headers/numeric/int128_have_intrinsic.inc

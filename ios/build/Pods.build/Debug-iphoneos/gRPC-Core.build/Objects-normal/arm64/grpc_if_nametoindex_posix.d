@@ -1,0 +1,46 @@
+dependencies: \
+  /Users/arbruck/Downloads/PaperChase/ios/Pods/gRPC-Core/src/core/lib/iomgr/grpc_if_nametoindex_posix.cc \
+  /Users/arbruck/Downloads/PaperChase/ios/Pods/Target\ Support\ Files/gRPC-Core/gRPC-Core-prefix.pch \
+  /Users/arbruck/Downloads/PaperChase/ios/Pods/gRPC-Core/include/grpc/support/port_platform.h \
+  /Users/arbruck/Downloads/PaperChase/ios/Pods/gRPC-Core/src/core/lib/iomgr/port.h \
+  /Users/arbruck/Downloads/PaperChase/ios/build/Debug-iphoneos/abseil/absl.framework/Headers/log/log.h \
+  /Users/arbruck/Downloads/PaperChase/ios/build/Debug-iphoneos/abseil/absl.framework/Headers/log/internal/log_impl.h \
+  /Users/arbruck/Downloads/PaperChase/ios/build/Debug-iphoneos/abseil/absl.framework/Headers/log/absl_vlog_is_on.h \
+  /Users/arbruck/Downloads/PaperChase/ios/build/Debug-iphoneos/abseil/absl.framework/Headers/base/attributes.h \
+  /Users/arbruck/Downloads/PaperChase/ios/build/Debug-iphoneos/abseil/absl.framework/Headers/base/config.h \
+  /Users/arbruck/Downloads/PaperChase/ios/build/Debug-iphoneos/abseil/absl.framework/Headers/base/options.h \
+  /Users/arbruck/Downloads/PaperChase/ios/build/Debug-iphoneos/abseil/absl.framework/Headers/base/policy_checks.h \
+  /Users/arbruck/Downloads/PaperChase/ios/build/Debug-iphoneos/abseil/absl.framework/Headers/log/internal/vlog_config.h \
+  /Users/arbruck/Downloads/PaperChase/ios/build/Debug-iphoneos/abseil/absl.framework/Headers/base/optimization.h \
+  /Users/arbruck/Downloads/PaperChase/ios/build/Debug-iphoneos/abseil/absl.framework/Headers/base/thread_annotations.h \
+  /Users/arbruck/Downloads/PaperChase/ios/build/Debug-iphoneos/abseil/absl.framework/Headers/strings/string_view.h \
+  /Users/arbruck/Downloads/PaperChase/ios/build/Debug-iphoneos/abseil/absl.framework/Headers/base/nullability.h \
+  /Users/arbruck/Downloads/PaperChase/ios/build/Debug-iphoneos/abseil/absl.framework/Headers/base/internal/nullability_impl.h \
+  /Users/arbruck/Downloads/PaperChase/ios/build/Debug-iphoneos/abseil/absl.framework/Headers/meta/type_traits.h \
+  /Users/arbruck/Downloads/PaperChase/ios/build/Debug-iphoneos/abseil/absl.framework/Headers/base/internal/throw_delegate.h \
+  /Users/arbruck/Downloads/PaperChase/ios/build/Debug-iphoneos/abseil/absl.framework/Headers/base/macros.h \
+  /Users/arbruck/Downloads/PaperChase/ios/build/Debug-iphoneos/abseil/absl.framework/Headers/base/port.h \
+  /Users/arbruck/Downloads/PaperChase/ios/build/Debug-iphoneos/abseil/absl.framework/Headers/log/internal/conditions.h \
+  /Users/arbruck/Downloads/PaperChase/ios/build/Debug-iphoneos/abseil/absl.framework/Headers/log/internal/voidify.h \
+  /Users/arbruck/Downloads/PaperChase/ios/build/Debug-iphoneos/abseil/absl.framework/Headers/log/internal/log_message.h \
+  /Users/arbruck/Downloads/PaperChase/ios/build/Debug-iphoneos/abseil/absl.framework/Headers/base/internal/errno_saver.h \
+  /Users/arbruck/Downloads/PaperChase/ios/build/Debug-iphoneos/abseil/absl.framework/Headers/base/log_severity.h \
+  /Users/arbruck/Downloads/PaperChase/ios/build/Debug-iphoneos/abseil/absl.framework/Headers/log/internal/nullguard.h \
+  /Users/arbruck/Downloads/PaperChase/ios/build/Debug-iphoneos/abseil/absl.framework/Headers/log/log_entry.h \
+  /Users/arbruck/Downloads/PaperChase/ios/build/Debug-iphoneos/abseil/absl.framework/Headers/log/internal/config.h \
+  /Users/arbruck/Downloads/PaperChase/ios/build/Debug-iphoneos/abseil/absl.framework/Headers/time/time.h \
+  /Users/arbruck/Downloads/PaperChase/ios/build/Debug-iphoneos/abseil/absl.framework/Headers/time/civil_time.h \
+  /Users/arbruck/Downloads/PaperChase/ios/build/Debug-iphoneos/abseil/absl.framework/Headers/time/internal/cctz/include/cctz/civil_time.h \
+  /Users/arbruck/Downloads/PaperChase/ios/build/Debug-iphoneos/abseil/absl.framework/Headers/time/internal/cctz/include/cctz/civil_time_detail.h \
+  /Users/arbruck/Downloads/PaperChase/ios/build/Debug-iphoneos/abseil/absl.framework/Headers/time/internal/cctz/include/cctz/time_zone.h \
+  /Users/arbruck/Downloads/PaperChase/ios/build/Debug-iphoneos/abseil/absl.framework/Headers/types/span.h \
+  /Users/arbruck/Downloads/PaperChase/ios/build/Debug-iphoneos/abseil/absl.framework/Headers/types/internal/span.h \
+  /Users/arbruck/Downloads/PaperChase/ios/build/Debug-iphoneos/abseil/absl.framework/Headers/algorithm/algorithm.h \
+  /Users/arbruck/Downloads/PaperChase/ios/build/Debug-iphoneos/abseil/absl.framework/Headers/log/log_sink.h \
+  /Users/arbruck/Downloads/PaperChase/ios/build/Debug-iphoneos/abseil/absl.framework/Headers/strings/has_absl_stringify.h \
+  /Users/arbruck/Downloads/PaperChase/ios/build/Debug-iphoneos/abseil/absl.framework/Headers/log/internal/strip.h \
+  /Users/arbruck/Downloads/PaperChase/ios/build/Debug-iphoneos/abseil/absl.framework/Headers/log/internal/nullstream.h \
+  /Users/arbruck/Downloads/PaperChase/ios/build/Debug-iphoneos/abseil/absl.framework/Headers/log/vlog_is_on.h \
+  /Users/arbruck/Downloads/PaperChase/ios/Pods/gRPC-Core/src/core/lib/gprpp/crash.h \
+  /Users/arbruck/Downloads/PaperChase/ios/Pods/gRPC-Core/src/core/lib/gprpp/debug_location.h \
+  /Users/arbruck/Downloads/PaperChase/ios/Pods/gRPC-Core/src/core/lib/iomgr/grpc_if_nametoindex.h

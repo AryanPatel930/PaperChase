@@ -1,0 +1,44 @@
+dependencies: \
+  /Users/arbruck/Downloads/PaperChase/ios/Pods/gRPC-Core/src/core/tsi/alts/zero_copy_frame_protector/alts_iovec_record_protocol.cc \
+  /Users/arbruck/Downloads/PaperChase/ios/Pods/Target\ Support\ Files/gRPC-Core/gRPC-Core-prefix.pch \
+  /Users/arbruck/Downloads/PaperChase/ios/Pods/gRPC-Core/src/core/tsi/alts/zero_copy_frame_protector/alts_iovec_record_protocol.h \
+  /Users/arbruck/Downloads/PaperChase/ios/Pods/gRPC-Core/include/grpc/support/port_platform.h \
+  /Users/arbruck/Downloads/PaperChase/ios/Pods/gRPC-Core/src/core/tsi/alts/crypt/gsec.h \
+  /Users/arbruck/Downloads/PaperChase/ios/build/Debug-iphoneos/abseil/absl.framework/Headers/types/span.h \
+  /Users/arbruck/Downloads/PaperChase/ios/build/Debug-iphoneos/abseil/absl.framework/Headers/base/attributes.h \
+  /Users/arbruck/Downloads/PaperChase/ios/build/Debug-iphoneos/abseil/absl.framework/Headers/base/config.h \
+  /Users/arbruck/Downloads/PaperChase/ios/build/Debug-iphoneos/abseil/absl.framework/Headers/base/options.h \
+  /Users/arbruck/Downloads/PaperChase/ios/build/Debug-iphoneos/abseil/absl.framework/Headers/base/policy_checks.h \
+  /Users/arbruck/Downloads/PaperChase/ios/build/Debug-iphoneos/abseil/absl.framework/Headers/base/internal/throw_delegate.h \
+  /Users/arbruck/Downloads/PaperChase/ios/build/Debug-iphoneos/abseil/absl.framework/Headers/base/macros.h \
+  /Users/arbruck/Downloads/PaperChase/ios/build/Debug-iphoneos/abseil/absl.framework/Headers/base/optimization.h \
+  /Users/arbruck/Downloads/PaperChase/ios/build/Debug-iphoneos/abseil/absl.framework/Headers/base/port.h \
+  /Users/arbruck/Downloads/PaperChase/ios/build/Debug-iphoneos/abseil/absl.framework/Headers/base/nullability.h \
+  /Users/arbruck/Downloads/PaperChase/ios/build/Debug-iphoneos/abseil/absl.framework/Headers/base/internal/nullability_impl.h \
+  /Users/arbruck/Downloads/PaperChase/ios/build/Debug-iphoneos/abseil/absl.framework/Headers/meta/type_traits.h \
+  /Users/arbruck/Downloads/PaperChase/ios/build/Debug-iphoneos/abseil/absl.framework/Headers/types/internal/span.h \
+  /Users/arbruck/Downloads/PaperChase/ios/build/Debug-iphoneos/abseil/absl.framework/Headers/algorithm/algorithm.h \
+  /Users/arbruck/Downloads/PaperChase/ios/Pods/gRPC-Core/include/grpc/event_engine/port.h \
+  /Users/arbruck/Downloads/PaperChase/ios/Pods/gRPC-Core/include/grpc/grpc.h \
+  /Users/arbruck/Downloads/PaperChase/ios/Pods/gRPC-Core/include/grpc/byte_buffer.h \
+  /Users/arbruck/Downloads/PaperChase/ios/Pods/gRPC-Core/include/grpc/impl/grpc_types.h \
+  /Users/arbruck/Downloads/PaperChase/ios/Pods/gRPC-Core/include/grpc/impl/channel_arg_names.h \
+  /Users/arbruck/Downloads/PaperChase/ios/Pods/gRPC-Core/include/grpc/impl/compression_types.h \
+  /Users/arbruck/Downloads/PaperChase/ios/Pods/gRPC-Core/include/grpc/slice.h \
+  /Users/arbruck/Downloads/PaperChase/ios/Pods/gRPC-Core/include/grpc/impl/slice_type.h \
+  /Users/arbruck/Downloads/PaperChase/ios/Pods/gRPC-Core/include/grpc/support/sync.h \
+  /Users/arbruck/Downloads/PaperChase/ios/Pods/gRPC-Core/include/grpc/support/time.h \
+  /Users/arbruck/Downloads/PaperChase/ios/Pods/gRPC-Core/include/grpc/support/sync_generic.h \
+  /Users/arbruck/Downloads/PaperChase/ios/Pods/gRPC-Core/include/grpc/support/atm.h \
+  /Users/arbruck/Downloads/PaperChase/ios/Pods/gRPC-Core/include/grpc/support/atm_gcc_atomic.h \
+  /Users/arbruck/Downloads/PaperChase/ios/Pods/gRPC-Core/include/grpc/support/sync_posix.h \
+  /Users/arbruck/Downloads/PaperChase/ios/Pods/gRPC-Core/include/grpc/status.h \
+  /Users/arbruck/Downloads/PaperChase/ios/Pods/gRPC-Core/include/grpc/slice_buffer.h \
+  /Users/arbruck/Downloads/PaperChase/ios/Pods/gRPC-Core/include/grpc/impl/connectivity_state.h \
+  /Users/arbruck/Downloads/PaperChase/ios/Pods/gRPC-Core/include/grpc/impl/propagation_bits.h \
+  /Users/arbruck/Downloads/PaperChase/ios/Pods/gRPC-Core/include/grpc/support/alloc.h \
+  /Users/arbruck/Downloads/PaperChase/ios/Pods/gRPC-Core/include/grpc/support/log.h \
+  /Users/arbruck/Downloads/PaperChase/ios/Pods/gRPC-Core/src/core/lib/gprpp/crash.h \
+  /Users/arbruck/Downloads/PaperChase/ios/build/Debug-iphoneos/abseil/absl.framework/Headers/strings/string_view.h \
+  /Users/arbruck/Downloads/PaperChase/ios/Pods/gRPC-Core/src/core/lib/gprpp/debug_location.h \
+  /Users/arbruck/Downloads/PaperChase/ios/Pods/gRPC-Core/src/core/tsi/alts/frame_protector/alts_counter.h

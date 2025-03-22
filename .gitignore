@@ -1,0 +1,22 @@
+# Ignore build folders and output files
+build/
+*.apk
+*.ipa
+*.dSYM
+*.framework
+*.xcarchive
+*.app
+*.xcworkspace
+*.lock
+
+# Ignore Firebase-related builds
+*.firebase/
+*.firebaseappcheck/
+
+# Ignore iOS and Android build artifacts
+android/app/build/
+android/.gradle/
+ios/Pods/
+ios/Flutter/App.framework
+ios/Flutter/Flutter.framework.dSYM
+ios/Flutter/Flutter.podspec

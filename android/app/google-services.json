@@ -1,0 +1,46 @@
+{
+  "project_info": {
+    "project_number": "1098757513078",
+    "project_id": "paperchase-7ad1d",
+    "storage_bucket": "paperchase-7ad1d.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1098757513078:android:504aff2e25702dd4f3a457",
+        "android_client_info": {
+          "package_name": "com.example.paperchase_app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1098757513078-c2l1icfb8jt1u8k3tkdkbil7pgej46qg.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDVzhSFOFzVuSfo953jOTkMg2z-pAN2o74"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1098757513078-c2l1icfb8jt1u8k3tkdkbil7pgej46qg.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "1098757513078-qqqtc113mmpod90o1jn1thv2rea08rlt.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.paperchaseApp"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -1,5 +1,8 @@
+import 'dart:convert';
 import 'dart:io';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
 import 'package:image_picker/image_picker.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
@@ -11,10 +14,10 @@ class PostBookPage extends StatefulWidget {
 
 class _PostBookPageState extends State<PostBookPage> {
   final TextEditingController titleController = TextEditingController();
-  final TextEditingController descriptionController = TextEditingController();
   final TextEditingController priceController = TextEditingController();
   final TextEditingController isbnController = TextEditingController();
   final TextEditingController authorController = TextEditingController();
+  final TextEditingController descriptionController = TextEditingController();
   File? _imageFile;
 
   // Function to pick an image from camera or gallery
@@ -30,32 +33,77 @@ class _PostBookPageState extends State<PostBookPage> {
   }
 }
 
+Future<String?> fetchBookDescription(String isbn) async {
+  final String url = "https://www.googleapis.com/books/v1/volumes?q=isbn:$isbn";
 
-  // Function to upload book data to Firebase
-  Future<bool> uploadBook() async {
   try {
-    // Store book details in Firestore
-    await FirebaseFirestore.instance.collection('books').add({
-      'title': titleController.text,
-      'description': descriptionController.text,
-      'price': priceController.text,
-      'isbn': isbnController.text,
-      'author': authorController.text,
-      'imageUrl': '', // Remove Firebase Storage dependency
-      'createdAt': Timestamp.now(),
-    });
-
-    return true;
+    final response = await http.get(Uri.parse(url));
+    if (response.statusCode == 200) {
+      final data = jsonDecode(response.body);
+      if (data['totalItems'] > 0) {
+        return data['items'][0]['volumeInfo']['description'] ?? 'No description available';
+      }
+    }
   } catch (e) {
-    print('Error uploading book: $e');
-    return false;
+    print("Error fetching book details: $e");
+  }
+  return null; // Return null if no description is found
+}
+
+Future<String?> uploadImageToImgur(File imageFile) async {
+  try {
+    final uri = Uri.parse('https://api.imgur.com/3/upload');
+    final request = http.MultipartRequest('POST', uri)
+      ..headers['Authorization'] = '00caf989adf38fa'
+      ..files.add(await http.MultipartFile.fromPath('image', imageFile.path));
+
+    final response = await request.send();
+
+    if (response.statusCode == 200) {
+      final responseData = await response.stream.bytesToString();
+      final jsonData = json.decode(responseData);
+      return jsonData['data']['link']; // The image URL from Imgur
+    } else {
+      print('Failed to upload image to Imgur');
+      return null;
+    }
+  } catch (e) {
+    print('Error uploading image: $e');
+    return null;
   }
 }
 
+  // Function to upload book data to Firebase
+  Future<bool> uploadBook() async {
+    try {
+      User? user = FirebaseAuth.instance.currentUser;
+      if (user == null) return false; // Ensure user is logged in
+
+      String? imageUrl;
+      if (_imageFile != null) {
+        imageUrl = await uploadImageToImgur(_imageFile!); 
+        if (imageUrl == null) return false; // Upload and get URL
+      }
+
+      await FirebaseFirestore.instance.collection('books').add({
+        'title': titleController.text,
+        'author': authorController.text,
+        'isbn': isbnController.text,
+        'price': priceController.text,
+        'description': descriptionController.text,
+        'userId': user.uid, // 🔹 Save logged-in user's ID
+        'imageUrl': imageUrl ?? "", // Optional image
+      });
+      return true;
+    } catch(e) {
+        print("Error uploading book: $e");
+        return false; 
+    }
+  }
 
   // Function to handle book posting
   Future<void> _postBook() async {
-  if (titleController.text.isEmpty || descriptionController.text.isEmpty ||
+  if (titleController.text.isEmpty ||
       priceController.text.isEmpty || isbnController.text.isEmpty ||
       authorController.text.isEmpty) {
     ScaffoldMessenger.of(context).showSnackBar(
@@ -63,6 +111,10 @@ class _PostBookPageState extends State<PostBookPage> {
     );
     return;
   }
+
+  String? description = await fetchBookDescription(isbnController.text);
+  descriptionController.text = description ?? 'No description available';
+
   bool success = await uploadBook();
   if (success) {
     Navigator.pushReplacementNamed(context, '/mybooks');
@@ -91,13 +143,7 @@ class _PostBookPageState extends State<PostBookPage> {
               ),
               SizedBox(height: 10),
 
-              // Description Input
-              TextField(
-                controller: descriptionController,
-                decoration: InputDecoration(labelText: 'Description'),
-                maxLines: 3,
-              ),
-              SizedBox(height: 10),
+              
 
               // Price Input
               TextField(

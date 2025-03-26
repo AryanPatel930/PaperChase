@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:paperchase_app/mybooks.dart';
 import 'firebase_options.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
@@ -72,8 +73,9 @@ class _MyAppState extends State<MyApp> {
         '/login': (context) => const LoginPage(),
         '/signup': (context) => const SignupPage(),
         '/profile': (context) => const ProfilePage(),
-        '/post': (context) => PostPage(),
+        '/post': (context) => PostBookPage(),
         '/inbox': (context) => const InboxPage(),
+        '/mybooks': (context) => MyBooksPage(),
       },
     );
   }
@@ -148,11 +150,14 @@ class _HomePageState extends State<HomePage> {
               _logout();
             } else if (value == 'profile') {
               Navigator.pushNamed(context, '/profile');
+            } else if (value == 'My Books'){
+              Navigator.push(context, MaterialPageRoute(builder: (context) => MyBooksPage()));
             }
           },
           itemBuilder: (BuildContext context) => [
             const PopupMenuItem(value: 'profile', child: Text('Profile')),
             const PopupMenuItem(value: 'logout', child: Text('Logout')),
+            const PopupMenuItem(value: 'My Books' , child: Text('My Books'))
           ],
         )
             : null,

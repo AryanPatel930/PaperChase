@@ -1,160 +1,166 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 
-class PostPage extends StatefulWidget {
-  const PostPage({Key? key}) : super(key: key);
-
+class PostBookPage extends StatefulWidget {
   @override
-  _PostPageState createState() => _PostPageState();
+  _PostBookPageState createState() => _PostBookPageState();
 }
 
-class _PostPageState extends State<PostPage> {
-  late XFile? _imageFile;
+class _PostBookPageState extends State<PostBookPage> {
+  final TextEditingController titleController = TextEditingController();
+  final TextEditingController descriptionController = TextEditingController();
+  final TextEditingController priceController = TextEditingController();
+  final TextEditingController isbnController = TextEditingController();
+  final TextEditingController authorController = TextEditingController();
+  File? _imageFile;
 
-  final ImagePicker _picker = ImagePicker();
-
-  final TextEditingController _titleController = TextEditingController();
-  final TextEditingController _descriptionController = TextEditingController();
-  final TextEditingController _priceController = TextEditingController();
-  
-  
-  // Default selected condition
-  String _selectedCondition = 'Like New';
-
-  @override
-  void initState() {
-    super.initState();
-    _imageFile = null;
-  }
-
-  // Pick an image from gallery
-  Future<void> _pickImageFromGallery() async {
-    final XFile? image = await _picker.pickImage(source: ImageSource.gallery);
+  // Function to pick an image from camera or gallery
+  Future<void> _pickImage(ImageSource source) async {
+  final pickedFile = await ImagePicker().pickImage(source: source);
+  if (pickedFile != null) {
     setState(() {
-      _imageFile = image;
+      _imageFile = File(pickedFile.path);
     });
+    print('Image picked: ${_imageFile!.path}');
+  } else {
+    print('No image selected.');
   }
+}
 
-  // Capture an image from camera
-  Future<void> _pickImageFromCamera() async {
-    final XFile? image = await _picker.pickImage(source: ImageSource.camera);
-    setState(() {
-      _imageFile = image;
+
+  // Function to upload book data to Firebase
+  Future<bool> uploadBook() async {
+  try {
+    // Store book details in Firestore
+    await FirebaseFirestore.instance.collection('books').add({
+      'title': titleController.text,
+      'description': descriptionController.text,
+      'price': priceController.text,
+      'isbn': isbnController.text,
+      'author': authorController.text,
+      'imageUrl': '', // Remove Firebase Storage dependency
+      'createdAt': Timestamp.now(),
     });
-  }
 
-  void _postTextbook() {
-    if (_imageFile != null && _titleController.text.isNotEmpty && _descriptionController.text.isNotEmpty && _priceController.text.isNotEmpty) {
-      // Handle the post functionality here. For example, uploading the image and other details.
-      print('Title: ${_titleController.text}');
-      print('Description: ${_descriptionController.text}');
-      print('Condition: $_selectedCondition');
-      print('Price: ${_priceController.text}');
-      print('Image Path: ${_imageFile!.path}');
-      
-      // Show confirmation after posting
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Textbook Posted!')),
-      );
-    } else {
-      // If any required field is missing
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Please fill all fields and select an image!')),
-      );
-    }
+    return true;
+  } catch (e) {
+    print('Error uploading book: $e');
+    return false;
   }
+}
+
+
+  // Function to handle book posting
+  Future<void> _postBook() async {
+  if (titleController.text.isEmpty || descriptionController.text.isEmpty ||
+      priceController.text.isEmpty || isbnController.text.isEmpty ||
+      authorController.text.isEmpty) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text('All fields are required.'))
+    );
+    return;
+  }
+  bool success = await uploadBook();
+  if (success) {
+    Navigator.pushReplacementNamed(context, '/mybooks');
+  } else {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text('Failed to post book. Try again.'))
+    );
+  }
+}
 
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Post Page'),
-      ),
-      body: SingleChildScrollView( // Wrap everything in a scrollable view
-        child: Padding(
-          padding: const EdgeInsets.all(16.0),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            _imageFile != null
-                ? Image.file(
-                    File(_imageFile!.path),
-                    height: 250,
-                    width: 250,
-                    fit: BoxFit.cover,
-                  )
-                : const Text('No image selected.'),
-            const SizedBox(height: 20),
-            TextField(
-                controller: _titleController,
-                decoration: const InputDecoration(
-                  labelText: 'Title',
-                  hintText: 'Enter the title of the textbook',
-                ),
+      appBar: AppBar(title: Text('Post a Book')),
+      body: Padding(
+        padding: EdgeInsets.all(16.0),
+        child: SingleChildScrollView(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              // Title Input
+              TextField(
+                controller: titleController,
+                decoration: InputDecoration(labelText: 'Title'),
               ),
-              const SizedBox(height: 20),
+              SizedBox(height: 10),
 
-            // If an image has been picked, display it
-            
+              // Description Input
+              TextField(
+                controller: descriptionController,
+                decoration: InputDecoration(labelText: 'Description'),
+                maxLines: 3,
+              ),
+              SizedBox(height: 10),
 
-            TextField(
-                controller: _priceController,
+              // Price Input
+              TextField(
+                controller: priceController,
+                decoration: InputDecoration(labelText: 'Price'),
                 keyboardType: TextInputType.number,
-                decoration: const InputDecoration(
-                  labelText: 'Price',
-                  hintText: 'Enter the price of the textbook',
+              ),
+              SizedBox(height: 10),
+
+              // ISBN Input
+              TextField(
+                controller: isbnController,
+                decoration: InputDecoration(labelText: 'ISBN Number'),
+                keyboardType: TextInputType.number,
+              ),
+              SizedBox(height: 10),
+
+              // Author Input
+              TextField(
+                controller: authorController,
+                decoration: InputDecoration(labelText: 'Author'),
+              ),
+              SizedBox(height: 20),
+
+              // Image Picker Buttons
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  ElevatedButton.icon(
+                    onPressed: () => _pickImage(ImageSource.camera),
+                    icon: Icon(Icons.camera),
+                    label: Text('Camera'),
+                  ),
+                  SizedBox(width: 20),
+                  ElevatedButton.icon(
+                    onPressed: () => _pickImage(ImageSource.gallery),
+                    icon: Icon(Icons.photo_library),
+                    label: Text('Gallery'),
+                  ),
+                ],
+              ),
+              SizedBox(height: 10),
+
+              // Display Selected Image
+              if (_imageFile != null)
+                Container(
+                  height: 150,
+                  width: double.infinity,
+                  child: Image.file(_imageFile!, fit: BoxFit.cover),
+                ),
+              SizedBox(height: 20),
+
+              // Post Book Button
+              Center(
+                child: ElevatedButton(
+                  onPressed: _postBook,
+                  child: Text('Post Book'),
                 ),
               ),
-              const SizedBox(height: 20),
-            TextField(
-                controller: _descriptionController,
-                decoration: const InputDecoration(
-                  labelText: 'Description',
-                  hintText: 'Enter a brief description',
-                ),
-                
-              ),
-              const SizedBox(height: 20),
-              const Text(
-                'Condition',
-                style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-              ),
-              DropdownButton<String>(
-                value: _selectedCondition,
-                onChanged: (String? newValue) {
-                  setState(() {
-                    _selectedCondition = newValue!;
-                  });
-                },
-                items: <String>['Poor', 'Fair', 'Good', "Like New"]
-                    .map<DropdownMenuItem<String>>((String value) {
-                  return DropdownMenuItem<String>(
-                    value: value,
-                    child: Text(value),
-                  );
-                }).toList(),
-              ),
-              const SizedBox(height:20),
-            ElevatedButton(
-              onPressed: _pickImageFromGallery,
-              child: const Text('Pick Image from Gallery'),
-            ),
-            const SizedBox(height: 20),
-            ElevatedButton(
-              onPressed: _pickImageFromCamera,
-              child: const Text('Take a Photo with Camera'),
-            ),
-            const SizedBox(height: 20),
-            ElevatedButton(
-              onPressed: _postTextbook,
-              child: const Text('Post Image'),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
-    )
     );
   }
 }

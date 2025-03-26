@@ -44,6 +44,7 @@ dependencies:
   permission_handler: ^11.4.0
   firebase_app_check: ^0.3.2+4
   camera: ^0.10.0+2
+  firebase_storage: ^12.4.4
   
 
 dev_dependencies:

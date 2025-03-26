@@ -206,6 +206,24 @@
       "languageVersion": "3.2"
     },
     {
+      "name": "firebase_storage",
+      "rootUri": "file:///Users/arbruck/.pub-cache/hosted/pub.dev/firebase_storage-12.4.4",
+      "packageUri": "lib/",
+      "languageVersion": "3.2"
+    },
+    {
+      "name": "firebase_storage_platform_interface",
+      "rootUri": "file:///Users/arbruck/.pub-cache/hosted/pub.dev/firebase_storage_platform_interface-5.2.4",
+      "packageUri": "lib/",
+      "languageVersion": "3.2"
+    },
+    {
+      "name": "firebase_storage_web",
+      "rootUri": "file:///Users/arbruck/.pub-cache/hosted/pub.dev/firebase_storage_web-3.10.11",
+      "packageUri": "lib/",
+      "languageVersion": "3.4"
+    },
+    {
       "name": "fixnum",
       "rootUri": "file:///Users/arbruck/.pub-cache/hosted/pub.dev/fixnum-1.1.1",
       "packageUri": "lib/",
@@ -560,7 +578,7 @@
       "languageVersion": "3.7"
     }
   ],
-  "generated": "2025-03-21T21:20:13.018829Z",
+  "generated": "2025-03-26T00:42:17.344083Z",
   "generator": "pub",
   "generatorVersion": "3.7.2",
   "flutterRoot": "file:///Users/arbruck/Downloads/flutter",

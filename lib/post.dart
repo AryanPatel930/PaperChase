@@ -19,6 +19,7 @@ class _PostBookPageState extends State<PostBookPage> {
   final TextEditingController authorController = TextEditingController();
   final TextEditingController descriptionController = TextEditingController();
   File? _imageFile;
+  String _selectedCondition = "Like New";
 
   // Function to pick an image from camera or gallery
   Future<void> _pickImage(ImageSource source) async {
@@ -52,19 +53,22 @@ Future<String?> fetchBookDescription(String isbn) async {
 
 Future<String?> uploadImageToImgur(File imageFile) async {
   try {
-    final uri = Uri.parse('https://api.imgur.com/3/upload');
-    final request = http.MultipartRequest('POST', uri)
-      ..headers['Authorization'] = '00caf989adf38fa'
-      ..files.add(await http.MultipartFile.fromPath('image', imageFile.path));
+    var request = http.MultipartRequest(
+      'POST', Uri.parse('https://api.imgur.com/3/upload')
+    );
 
-    final response = await request.send();
+    request.headers['Authorization'] = 'Client-ID 00caf989adf38fa';
 
+    var pic = await http.MultipartFile.fromPath('image', imageFile.path);
+    request.files.add(pic);
+
+    var response = await request.send();
     if (response.statusCode == 200) {
       final responseData = await response.stream.bytesToString();
       final jsonData = json.decode(responseData);
-      return jsonData['data']['link']; // The image URL from Imgur
+      return jsonData['data']['link']; // Image URL from Imgur
     } else {
-      print('Failed to upload image to Imgur');
+      print('Failed to upload image: ${response.reasonPhrase}');
       return null;
     }
   } catch (e) {
@@ -91,8 +95,10 @@ Future<String?> uploadImageToImgur(File imageFile) async {
         'isbn': isbnController.text,
         'price': priceController.text,
         'description': descriptionController.text,
+        'condition': _selectedCondition,
         'userId': user.uid, // 🔹 Save logged-in user's ID
         'imageUrl': imageUrl ?? "", // Optional image
+        'timestamp': FieldValue.serverTimestamp(),
       });
       return true;
     } catch(e) {
@@ -167,7 +173,21 @@ Future<String?> uploadImageToImgur(File imageFile) async {
                 decoration: InputDecoration(labelText: 'Author'),
               ),
               SizedBox(height: 20),
-
+              DropdownButtonFormField<String>(
+                value: _selectedCondition,
+                items: ['Like New', 'Good', 'Fair', 'Poor']
+                    .map((condition) => DropdownMenuItem(
+                          value: condition,
+                          child: Text(condition),
+                        ))
+                    .toList(),
+                onChanged: (value) {
+                  setState(() {
+                    _selectedCondition = value!;
+                  });
+                },
+                decoration: InputDecoration(labelText: 'Condition'),
+              ),
               // Image Picker Buttons
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,

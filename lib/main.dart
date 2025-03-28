@@ -1,6 +1,8 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:paperchase_app/book_detail_page.dart';
 import 'package:paperchase_app/mybooks.dart';
 import 'firebase_options.dart';
 import 'package:http/http.dart' as http;
@@ -101,6 +103,7 @@ class _HomePageState extends State<HomePage> {
   void initState() {
     super.initState();
     _checkUserLoginStatus();
+    _loadRecentBooks();
   }
 
   void _checkUserLoginStatus() {
@@ -121,22 +124,53 @@ class _HomePageState extends State<HomePage> {
   }
 
   Future<void> _searchBooks() async {
-    final query = _searchController.text;
-    if (query.isEmpty) return;
+  final query = _searchController.text;
+  if (query.isEmpty) {
+    _loadRecentBooks(); // If search is empty, load recent books
+    return;
+  }
 
-    final url = Uri.parse('https://www.googleapis.com/books/v1/volumes?q=${Uri.encodeComponent(query)}');
+  try {
+    final QuerySnapshot snapshot = await FirebaseFirestore.instance
+        .collection('books')
+        .orderBy('timestamp', descending: true) // Sort by the most recent posts
+        .get();
 
+    // Now filter books locally based on the title
+    final filteredBooks = snapshot.docs.where((doc) {
+      final title = doc['title'].toString().toLowerCase();
+      return title.contains(query.toLowerCase()); // Case-insensitive search
+    }).toList();
+
+    setState(() {
+      _books = filteredBooks.map((doc) => doc.data()).toList();
+    });
+  } catch (e) {
+    print("Error searching books: $e");
+  }
+}
+
+
+  Future<void> _loadRecentBooks() async {
     try {
-      final response = await http.get(url);
-      final data = json.decode(response.body);
+      final QuerySnapshot snapshot = await FirebaseFirestore.instance
+          .collection('books')
+          .orderBy('timestamp', descending: true) // Sort by the most recent posts
+          .limit(10) // Optionally limit to the latest 10 books
+          .get();
 
       setState(() {
-        _books = data['items'] ?? [];
+        _books = snapshot.docs.map((doc) => doc.data()).toList();
       });
-    } catch (error) {
-      print("Error fetching books: $error");
+    } catch (e) {
+      print("Error fetching recent books: $e");
     }
   }
+
+  
+
+
+
 
   @override
   Widget build(BuildContext context) {
@@ -198,23 +232,24 @@ class _HomePageState extends State<HomePage> {
               child: ListView.builder(
                 itemCount: _books.length,
                 itemBuilder: (context, index) {
-                  final book = _books[index]['volumeInfo'];
+                  final book = _books[index];
+                    
                   final title = book['title'] ?? "Unknown Title";
-                  final authors = book['authors']?.join(", ") ?? "Unknown Author";
-                  final thumbnail = book['imageLinks']?['thumbnail'] ?? "https://via.placeholder.com/50";
-                  final link = book['infoLink'] ?? "#";
-
+                  final author = book['author'] ?? "No author available";
+                  final thumbnail = book['imageUrl'] ?? "https://via.placeholder.com/50";
+                  
                   return ListTile(
                     leading: Image.network(thumbnail, width: 50, height: 50, fit: BoxFit.cover),
                     title: Text(title),
-                    subtitle: Text(authors),
-                    onTap: () async {
-                      final Uri url = Uri.parse(link);
-                      if (await canLaunchUrl(url)) {
-                        await launchUrl(url);
-                      } else {
-                        print("Could not open $url");
-                      }
+                    subtitle: Text(author),
+                    onTap: () {
+                    
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => BookDetailsPage(book: book), // Pass book data
+                        ),
+                      );
                     },
                   );
                 },

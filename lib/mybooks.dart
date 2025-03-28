@@ -28,7 +28,7 @@ class MyBooksPage extends StatelessWidget {
           return ListView.builder(
             itemCount: books.length,
             itemBuilder: (context, index) {
-              var book = books[index];
+              var book = books[index].data() as Map<String, dynamic>;  // Use data() to get the map
 
               return ListTile(
                 leading: book['imageUrl'] != null

@@ -1,0 +1,28 @@
+moduledependenciestarget: \
+  /Users/arbruck/Downloads/PaperChase/ios/build/Debug-iphoneos/permission_handler_apple/permission_handler_apple.framework/Modules/module.modulemap \
+  /Users/arbruck/Downloads/PaperChase/ios/build/Debug-iphoneos/permission_handler_apple/permission_handler_apple.framework/Headers/permission_handler_apple-umbrella.h \
+  /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS18.2.sdk/System/Library/Frameworks/UIKit.framework/Modules/module.modulemap \
+  /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS18.2.sdk/System/Library/Frameworks/Foundation.framework/Modules/module.modulemap \
+  /Users/arbruck/Downloads/PaperChase/ios/build/Debug-iphoneos/permission_handler_apple/permission_handler_apple.framework/Headers/PermissionHandlerEnums.h \
+  /Users/arbruck/Downloads/PaperChase/ios/build/Debug-iphoneos/permission_handler_apple/permission_handler_apple.framework/Headers/PermissionHandlerPlugin.h \
+  /Users/arbruck/Downloads/PaperChase/ios/build/Debug-iphoneos/Flutter.framework/Modules/module.modulemap \
+  /Users/arbruck/Downloads/PaperChase/ios/build/Debug-iphoneos/permission_handler_apple/permission_handler_apple.framework/Headers/PermissionManager.h \
+  /Users/arbruck/Downloads/PaperChase/ios/build/Debug-iphoneos/permission_handler_apple/permission_handler_apple.framework/Headers/AudioVideoPermissionStrategy.h \
+  /Users/arbruck/Downloads/PaperChase/ios/build/Debug-iphoneos/permission_handler_apple/permission_handler_apple.framework/Headers/PermissionStrategy.h \
+  /Users/arbruck/Downloads/PaperChase/ios/build/Debug-iphoneos/permission_handler_apple/permission_handler_apple.framework/Headers/UnknownPermissionStrategy.h \
+  /Users/arbruck/Downloads/PaperChase/ios/build/Debug-iphoneos/permission_handler_apple/permission_handler_apple.framework/Headers/AppTrackingTransparencyPermissionStrategy.h \
+  /Users/arbruck/Downloads/PaperChase/ios/build/Debug-iphoneos/permission_handler_apple/permission_handler_apple.framework/Headers/BackgroundRefreshStrategy.h \
+  /Users/arbruck/Downloads/PaperChase/ios/build/Debug-iphoneos/permission_handler_apple/permission_handler_apple.framework/Headers/BluetoothPermissionStrategy.h \
+  /Users/arbruck/Downloads/PaperChase/ios/build/Debug-iphoneos/permission_handler_apple/permission_handler_apple.framework/Headers/ContactPermissionStrategy.h \
+  /Users/arbruck/Downloads/PaperChase/ios/build/Debug-iphoneos/permission_handler_apple/permission_handler_apple.framework/Headers/EventPermissionStrategy.h \
+  /Users/arbruck/Downloads/PaperChase/ios/build/Debug-iphoneos/permission_handler_apple/permission_handler_apple.framework/Headers/LocationPermissionStrategy.h \
+  /Users/arbruck/Downloads/PaperChase/ios/build/Debug-iphoneos/permission_handler_apple/permission_handler_apple.framework/Headers/MediaLibraryPermissionStrategy.h \
+  /Users/arbruck/Downloads/PaperChase/ios/build/Debug-iphoneos/permission_handler_apple/permission_handler_apple.framework/Headers/PhonePermissionStrategy.h \
+  /Users/arbruck/Downloads/PaperChase/ios/build/Debug-iphoneos/permission_handler_apple/permission_handler_apple.framework/Headers/PhotoPermissionStrategy.h \
+  /Users/arbruck/Downloads/PaperChase/ios/build/Debug-iphoneos/permission_handler_apple/permission_handler_apple.framework/Headers/SensorPermissionStrategy.h \
+  /Users/arbruck/Downloads/PaperChase/ios/build/Debug-iphoneos/permission_handler_apple/permission_handler_apple.framework/Headers/SpeechPermissionStrategy.h \
+  /Users/arbruck/Downloads/PaperChase/ios/build/Debug-iphoneos/permission_handler_apple/permission_handler_apple.framework/Headers/StoragePermissionStrategy.h \
+  /Users/arbruck/Downloads/PaperChase/ios/build/Debug-iphoneos/permission_handler_apple/permission_handler_apple.framework/Headers/NotificationPermissionStrategy.h \
+  /Users/arbruck/Downloads/PaperChase/ios/build/Debug-iphoneos/permission_handler_apple/permission_handler_apple.framework/Headers/CriticalAlertsPermissionStrategy.h \
+  /Users/arbruck/Downloads/PaperChase/ios/build/Debug-iphoneos/permission_handler_apple/permission_handler_apple.framework/Headers/AssistantPermissionStrategy.h \
+  /Users/arbruck/Downloads/PaperChase/ios/build/Debug-iphoneos/permission_handler_apple/permission_handler_apple.framework/Headers/Codec.h

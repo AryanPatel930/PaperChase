@@ -1,0 +1,18 @@
+"/Users/arbruck/Downloads/PaperChase/ios/Pods/FirebaseFirestore/Firestore/Swift/Source/Codable/GeoPoint+Codable.swift":
+  diagnostics: "/Users/arbruck/Downloads/PaperChase/ios/build/Pods.build/Debug-iphoneos/FirebaseFirestore.build/Objects-normal/arm64/GeoPoint+Codable.dia"
+  object: "/Users/arbruck/Downloads/PaperChase/ios/build/Pods.build/Debug-iphoneos/FirebaseFirestore.build/Objects-normal/arm64/GeoPoint+Codable.o"
+  const-values: "/Users/arbruck/Downloads/PaperChase/ios/build/Pods.build/Debug-iphoneos/FirebaseFirestore.build/Objects-normal/arm64/GeoPoint+Codable.swiftconstvalues"
+  dependencies: "/Users/arbruck/Downloads/PaperChase/ios/build/Pods.build/Debug-iphoneos/FirebaseFirestore.build/Objects-normal/arm64/GeoPoint+Codable.d"
+  swift-dependencies: "/Users/arbruck/Downloads/PaperChase/ios/build/Pods.build/Debug-iphoneos/FirebaseFirestore.build/Objects-normal/arm64/GeoPoint+Codable.swiftdeps"
+"/Users/arbruck/Downloads/PaperChase/ios/Pods/FirebaseFirestore/Firestore/Swift/Source/PropertyWrapper/QueryPredicate.swift":
+  const-values: "/Users/arbruck/Downloads/PaperChase/ios/build/Pods.build/Debug-iphoneos/FirebaseFirestore.build/Objects-normal/arm64/QueryPredicate.swiftconstvalues"
+  dependencies: "/Users/arbruck/Downloads/PaperChase/ios/build/Pods.build/Debug-iphoneos/FirebaseFirestore.build/Objects-normal/arm64/QueryPredicate.d"
+  swift-dependencies: "/Users/arbruck/Downloads/PaperChase/ios/build/Pods.build/Debug-iphoneos/FirebaseFirestore.build/Objects-normal/arm64/QueryPredicate.swiftdeps"
+  diagnostics: "/Users/arbruck/Downloads/PaperChase/ios/build/Pods.build/Debug-iphoneos/FirebaseFirestore.build/Objects-normal/arm64/QueryPredicate.dia"
+  object: "/Users/arbruck/Downloads/PaperChase/ios/build/Pods.build/Debug-iphoneos/FirebaseFirestore.build/Objects-normal/arm64/QueryPredicate.o"
+"/Users/arbruck/Downloads/PaperChase/ios/Pods/FirebaseFirestore/Firestore/Swift/Source/PropertyWrapper/FirestoreQueryObservable.swift":
+  diagnostics: "/Users/arbruck/Downloads/PaperChase/ios/build/Pods.build/Debug-iphoneos/FirebaseFirestore.build/Objects-normal/arm64/FirestoreQueryObservable.dia"
+  const-values: "/Users/arbruck/Downloads/PaperChase/ios/build/Pods.build/Debug-iphoneos/FirebaseFirestore.build/Objects-normal/arm64/FirestoreQueryObservable.swiftconstvalues"
+  swift-dependencies: "/Users/arbruck/Downloads/PaperChase/ios/build/Pods.build/Debug-iphoneos/FirebaseFirestore.build/Objects-normal/arm64/FirestoreQueryObservable.swiftdeps"
+  object: "/Users/arbruck/Downloads/PaperChase/ios/build/Pods.build/Debug-iphoneos/FirebaseFirestore.build/Objects-normal/arm64/FirestoreQueryObservable.o"
+  dependencies: "/Users/arbruck/Downloads/PaperChase/ios/build/Pods.build/Debug-iphoneos/FirebaseFirestore.build/Objects-normal/arm64/FirestoreQueryObservable.d"

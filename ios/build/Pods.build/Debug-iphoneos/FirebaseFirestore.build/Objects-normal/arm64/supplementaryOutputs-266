@@ -1,0 +1,18 @@
+"/Users/arbruck/Downloads/PaperChase/ios/Pods/FirebaseFirestore/Firestore/Swift/Source/Codable/TimestampDecodingStrategy.swift":
+  const-values: "/Users/arbruck/Downloads/PaperChase/ios/build/Pods.build/Debug-iphoneos/FirebaseFirestore.build/Objects-normal/arm64/TimestampDecodingStrategy.swiftconstvalues"
+  dependencies: "/Users/arbruck/Downloads/PaperChase/ios/build/Pods.build/Debug-iphoneos/FirebaseFirestore.build/Objects-normal/arm64/TimestampDecodingStrategy.d"
+  swift-dependencies: "/Users/arbruck/Downloads/PaperChase/ios/build/Pods.build/Debug-iphoneos/FirebaseFirestore.build/Objects-normal/arm64/TimestampDecodingStrategy.swiftdeps"
+  diagnostics: "/Users/arbruck/Downloads/PaperChase/ios/build/Pods.build/Debug-iphoneos/FirebaseFirestore.build/Objects-normal/arm64/TimestampDecodingStrategy.dia"
+  object: "/Users/arbruck/Downloads/PaperChase/ios/build/Pods.build/Debug-iphoneos/FirebaseFirestore.build/Objects-normal/arm64/TimestampDecodingStrategy.o"
+"/Users/arbruck/Downloads/PaperChase/ios/Pods/FirebaseFirestore/Firestore/Swift/Source/Codable/Transaction+WriteEncodable.swift":
+  swift-dependencies: "/Users/arbruck/Downloads/PaperChase/ios/build/Pods.build/Debug-iphoneos/FirebaseFirestore.build/Objects-normal/arm64/Transaction+WriteEncodable.swiftdeps"
+  diagnostics: "/Users/arbruck/Downloads/PaperChase/ios/build/Pods.build/Debug-iphoneos/FirebaseFirestore.build/Objects-normal/arm64/Transaction+WriteEncodable.dia"
+  dependencies: "/Users/arbruck/Downloads/PaperChase/ios/build/Pods.build/Debug-iphoneos/FirebaseFirestore.build/Objects-normal/arm64/Transaction+WriteEncodable.d"
+  object: "/Users/arbruck/Downloads/PaperChase/ios/build/Pods.build/Debug-iphoneos/FirebaseFirestore.build/Objects-normal/arm64/Transaction+WriteEncodable.o"
+  const-values: "/Users/arbruck/Downloads/PaperChase/ios/build/Pods.build/Debug-iphoneos/FirebaseFirestore.build/Objects-normal/arm64/Transaction+WriteEncodable.swiftconstvalues"
+"/Users/arbruck/Downloads/PaperChase/ios/Pods/FirebaseFirestore/Firestore/Swift/Source/Codable/TimestampEncodingStrategy.swift":
+  dependencies: "/Users/arbruck/Downloads/PaperChase/ios/build/Pods.build/Debug-iphoneos/FirebaseFirestore.build/Objects-normal/arm64/TimestampEncodingStrategy.d"
+  const-values: "/Users/arbruck/Downloads/PaperChase/ios/build/Pods.build/Debug-iphoneos/FirebaseFirestore.build/Objects-normal/arm64/TimestampEncodingStrategy.swiftconstvalues"
+  object: "/Users/arbruck/Downloads/PaperChase/ios/build/Pods.build/Debug-iphoneos/FirebaseFirestore.build/Objects-normal/arm64/TimestampEncodingStrategy.o"
+  diagnostics: "/Users/arbruck/Downloads/PaperChase/ios/build/Pods.build/Debug-iphoneos/FirebaseFirestore.build/Objects-normal/arm64/TimestampEncodingStrategy.dia"
+  swift-dependencies: "/Users/arbruck/Downloads/PaperChase/ios/build/Pods.build/Debug-iphoneos/FirebaseFirestore.build/Objects-normal/arm64/TimestampEncodingStrategy.swiftdeps"

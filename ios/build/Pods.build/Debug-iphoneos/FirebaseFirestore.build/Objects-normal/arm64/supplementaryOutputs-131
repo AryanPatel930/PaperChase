@@ -1,0 +1,18 @@
+"/Users/arbruck/Downloads/PaperChase/ios/Pods/FirebaseFirestore/Firestore/Swift/Source/Codable/WriteBatch+WriteEncodable.swift":
+  const-values: "/Users/arbruck/Downloads/PaperChase/ios/build/Pods.build/Debug-iphoneos/FirebaseFirestore.build/Objects-normal/arm64/WriteBatch+WriteEncodable.swiftconstvalues"
+  object: "/Users/arbruck/Downloads/PaperChase/ios/build/Pods.build/Debug-iphoneos/FirebaseFirestore.build/Objects-normal/arm64/WriteBatch+WriteEncodable.o"
+  dependencies: "/Users/arbruck/Downloads/PaperChase/ios/build/Pods.build/Debug-iphoneos/FirebaseFirestore.build/Objects-normal/arm64/WriteBatch+WriteEncodable.d"
+  swift-dependencies: "/Users/arbruck/Downloads/PaperChase/ios/build/Pods.build/Debug-iphoneos/FirebaseFirestore.build/Objects-normal/arm64/WriteBatch+WriteEncodable.swiftdeps"
+  diagnostics: "/Users/arbruck/Downloads/PaperChase/ios/build/Pods.build/Debug-iphoneos/FirebaseFirestore.build/Objects-normal/arm64/WriteBatch+WriteEncodable.dia"
+"/Users/arbruck/Downloads/PaperChase/ios/Pods/FirebaseFirestore/Firestore/Swift/Source/Codable/VectorValue+Codable.swift":
+  const-values: "/Users/arbruck/Downloads/PaperChase/ios/build/Pods.build/Debug-iphoneos/FirebaseFirestore.build/Objects-normal/arm64/VectorValue+Codable.swiftconstvalues"
+  object: "/Users/arbruck/Downloads/PaperChase/ios/build/Pods.build/Debug-iphoneos/FirebaseFirestore.build/Objects-normal/arm64/VectorValue+Codable.o"
+  diagnostics: "/Users/arbruck/Downloads/PaperChase/ios/build/Pods.build/Debug-iphoneos/FirebaseFirestore.build/Objects-normal/arm64/VectorValue+Codable.dia"
+  swift-dependencies: "/Users/arbruck/Downloads/PaperChase/ios/build/Pods.build/Debug-iphoneos/FirebaseFirestore.build/Objects-normal/arm64/VectorValue+Codable.swiftdeps"
+  dependencies: "/Users/arbruck/Downloads/PaperChase/ios/build/Pods.build/Debug-iphoneos/FirebaseFirestore.build/Objects-normal/arm64/VectorValue+Codable.d"
+"/Users/arbruck/Downloads/PaperChase/ios/Pods/FirebaseFirestore/Firestore/Swift/Source/SwiftAPI/VectorValue+Swift.swift":
+  diagnostics: "/Users/arbruck/Downloads/PaperChase/ios/build/Pods.build/Debug-iphoneos/FirebaseFirestore.build/Objects-normal/arm64/VectorValue+Swift.dia"
+  const-values: "/Users/arbruck/Downloads/PaperChase/ios/build/Pods.build/Debug-iphoneos/FirebaseFirestore.build/Objects-normal/arm64/VectorValue+Swift.swiftconstvalues"
+  dependencies: "/Users/arbruck/Downloads/PaperChase/ios/build/Pods.build/Debug-iphoneos/FirebaseFirestore.build/Objects-normal/arm64/VectorValue+Swift.d"
+  swift-dependencies: "/Users/arbruck/Downloads/PaperChase/ios/build/Pods.build/Debug-iphoneos/FirebaseFirestore.build/Objects-normal/arm64/VectorValue+Swift.swiftdeps"
+  object: "/Users/arbruck/Downloads/PaperChase/ios/build/Pods.build/Debug-iphoneos/FirebaseFirestore.build/Objects-normal/arm64/VectorValue+Swift.o"

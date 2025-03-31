@@ -1,0 +1,24 @@
+"/Users/arbruck/Downloads/PaperChase/ios/Pods/FirebaseFirestore/Firestore/Swift/Source/Codable/DocumentReference+WriteEncodable.swift":
+  object: "/Users/arbruck/Downloads/PaperChase/ios/build/Pods.build/Debug-iphoneos/FirebaseFirestore.build/Objects-normal/arm64/DocumentReference+WriteEncodable.o"
+  dependencies: "/Users/arbruck/Downloads/PaperChase/ios/build/Pods.build/Debug-iphoneos/FirebaseFirestore.build/Objects-normal/arm64/DocumentReference+WriteEncodable.d"
+  swift-dependencies: "/Users/arbruck/Downloads/PaperChase/ios/build/Pods.build/Debug-iphoneos/FirebaseFirestore.build/Objects-normal/arm64/DocumentReference+WriteEncodable.swiftdeps"
+  const-values: "/Users/arbruck/Downloads/PaperChase/ios/build/Pods.build/Debug-iphoneos/FirebaseFirestore.build/Objects-normal/arm64/DocumentReference+WriteEncodable.swiftconstvalues"
+  diagnostics: "/Users/arbruck/Downloads/PaperChase/ios/build/Pods.build/Debug-iphoneos/FirebaseFirestore.build/Objects-normal/arm64/DocumentReference+WriteEncodable.dia"
+"/Users/arbruck/Downloads/PaperChase/ios/Pods/FirebaseFirestore/Firestore/Swift/Source/Codable/DocumentReference+Codable.swift":
+  dependencies: "/Users/arbruck/Downloads/PaperChase/ios/build/Pods.build/Debug-iphoneos/FirebaseFirestore.build/Objects-normal/arm64/DocumentReference+Codable.d"
+  diagnostics: "/Users/arbruck/Downloads/PaperChase/ios/build/Pods.build/Debug-iphoneos/FirebaseFirestore.build/Objects-normal/arm64/DocumentReference+Codable.dia"
+  const-values: "/Users/arbruck/Downloads/PaperChase/ios/build/Pods.build/Debug-iphoneos/FirebaseFirestore.build/Objects-normal/arm64/DocumentReference+Codable.swiftconstvalues"
+  swift-dependencies: "/Users/arbruck/Downloads/PaperChase/ios/build/Pods.build/Debug-iphoneos/FirebaseFirestore.build/Objects-normal/arm64/DocumentReference+Codable.swiftdeps"
+  object: "/Users/arbruck/Downloads/PaperChase/ios/build/Pods.build/Debug-iphoneos/FirebaseFirestore.build/Objects-normal/arm64/DocumentReference+Codable.o"
+"/Users/arbruck/Downloads/PaperChase/ios/Pods/FirebaseFirestore/Firestore/Swift/Source/Codable/DocumentReference+ReadDecodable.swift":
+  dependencies: "/Users/arbruck/Downloads/PaperChase/ios/build/Pods.build/Debug-iphoneos/FirebaseFirestore.build/Objects-normal/arm64/DocumentReference+ReadDecodable.d"
+  const-values: "/Users/arbruck/Downloads/PaperChase/ios/build/Pods.build/Debug-iphoneos/FirebaseFirestore.build/Objects-normal/arm64/DocumentReference+ReadDecodable.swiftconstvalues"
+  diagnostics: "/Users/arbruck/Downloads/PaperChase/ios/build/Pods.build/Debug-iphoneos/FirebaseFirestore.build/Objects-normal/arm64/DocumentReference+ReadDecodable.dia"
+  swift-dependencies: "/Users/arbruck/Downloads/PaperChase/ios/build/Pods.build/Debug-iphoneos/FirebaseFirestore.build/Objects-normal/arm64/DocumentReference+ReadDecodable.swiftdeps"
+  object: "/Users/arbruck/Downloads/PaperChase/ios/build/Pods.build/Debug-iphoneos/FirebaseFirestore.build/Objects-normal/arm64/DocumentReference+ReadDecodable.o"
+"/Users/arbruck/Downloads/PaperChase/ios/Pods/FirebaseFirestore/Firestore/Swift/Source/Codable/DocumentID.swift":
+  object: "/Users/arbruck/Downloads/PaperChase/ios/build/Pods.build/Debug-iphoneos/FirebaseFirestore.build/Objects-normal/arm64/DocumentID.o"
+  const-values: "/Users/arbruck/Downloads/PaperChase/ios/build/Pods.build/Debug-iphoneos/FirebaseFirestore.build/Objects-normal/arm64/DocumentID.swiftconstvalues"
+  swift-dependencies: "/Users/arbruck/Downloads/PaperChase/ios/build/Pods.build/Debug-iphoneos/FirebaseFirestore.build/Objects-normal/arm64/DocumentID.swiftdeps"
+  dependencies: "/Users/arbruck/Downloads/PaperChase/ios/build/Pods.build/Debug-iphoneos/FirebaseFirestore.build/Objects-normal/arm64/DocumentID.d"
+  diagnostics: "/Users/arbruck/Downloads/PaperChase/ios/build/Pods.build/Debug-iphoneos/FirebaseFirestore.build/Objects-normal/arm64/DocumentID.dia"

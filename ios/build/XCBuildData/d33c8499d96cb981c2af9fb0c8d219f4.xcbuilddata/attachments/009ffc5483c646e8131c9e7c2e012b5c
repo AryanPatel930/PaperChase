@@ -1,0 +1,25 @@
+/Users/arbruck/Downloads/PaperChase/ios/Pods/Target Support Files/Pods-Runner/Pods-Runner-frameworks.sh
+/Users/arbruck/Downloads/PaperChase/ios/build/Debug-iphoneos/AppCheckCore/AppCheckCore.framework
+/Users/arbruck/Downloads/PaperChase/ios/build/Debug-iphoneos/BoringSSL-GRPC/openssl_grpc.framework
+/Users/arbruck/Downloads/PaperChase/ios/build/Debug-iphoneos/FirebaseAppCheck/FirebaseAppCheck.framework
+/Users/arbruck/Downloads/PaperChase/ios/build/Debug-iphoneos/FirebaseAppCheckInterop/FirebaseAppCheckInterop.framework
+/Users/arbruck/Downloads/PaperChase/ios/build/Debug-iphoneos/FirebaseAuth/FirebaseAuth.framework
+/Users/arbruck/Downloads/PaperChase/ios/build/Debug-iphoneos/FirebaseAuthInterop/FirebaseAuthInterop.framework
+/Users/arbruck/Downloads/PaperChase/ios/build/Debug-iphoneos/FirebaseCore/FirebaseCore.framework
+/Users/arbruck/Downloads/PaperChase/ios/build/Debug-iphoneos/FirebaseCoreExtension/FirebaseCoreExtension.framework
+/Users/arbruck/Downloads/PaperChase/ios/build/Debug-iphoneos/FirebaseCoreInternal/FirebaseCoreInternal.framework
+/Users/arbruck/Downloads/PaperChase/ios/build/Debug-iphoneos/FirebaseFirestore/FirebaseFirestore.framework
+/Users/arbruck/Downloads/PaperChase/ios/build/Debug-iphoneos/FirebaseFirestoreInternal/FirebaseFirestoreInternal.framework
+/Users/arbruck/Downloads/PaperChase/ios/build/Debug-iphoneos/FirebaseSharedSwift/FirebaseSharedSwift.framework
+/Users/arbruck/Downloads/PaperChase/ios/build/Debug-iphoneos/GTMSessionFetcher/GTMSessionFetcher.framework
+/Users/arbruck/Downloads/PaperChase/ios/build/Debug-iphoneos/GoogleUtilities/GoogleUtilities.framework
+/Users/arbruck/Downloads/PaperChase/ios/build/Debug-iphoneos/PromisesObjC/FBLPromises.framework
+/Users/arbruck/Downloads/PaperChase/ios/build/Debug-iphoneos/RecaptchaInterop/RecaptchaInterop.framework
+/Users/arbruck/Downloads/PaperChase/ios/build/Debug-iphoneos/abseil/absl.framework
+/Users/arbruck/Downloads/PaperChase/ios/build/Debug-iphoneos/camera_avfoundation/camera_avfoundation.framework
+/Users/arbruck/Downloads/PaperChase/ios/build/Debug-iphoneos/gRPC-C++/grpcpp.framework
+/Users/arbruck/Downloads/PaperChase/ios/build/Debug-iphoneos/gRPC-Core/grpc.framework
+/Users/arbruck/Downloads/PaperChase/ios/build/Debug-iphoneos/image_picker_ios/image_picker_ios.framework
+/Users/arbruck/Downloads/PaperChase/ios/build/Debug-iphoneos/leveldb-library/leveldb.framework
+/Users/arbruck/Downloads/PaperChase/ios/build/Debug-iphoneos/nanopb/nanopb.framework
+/Users/arbruck/Downloads/PaperChase/ios/build/Debug-iphoneos/url_launcher_ios/url_launcher_ios.framework

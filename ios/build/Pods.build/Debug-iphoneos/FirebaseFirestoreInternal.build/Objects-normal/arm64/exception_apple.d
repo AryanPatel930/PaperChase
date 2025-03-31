@@ -1,0 +1,35 @@
+dependencies: \
+  /Users/arbruck/Downloads/PaperChase/ios/Pods/FirebaseFirestoreInternal/Firestore/core/src/util/exception_apple.mm \
+  /Users/arbruck/Downloads/PaperChase/ios/Pods/FirebaseFirestoreInternal/Firestore/core/src/util/exception_apple.h \
+  /Users/arbruck/Downloads/PaperChase/ios/Pods/FirebaseFirestoreInternal/Firestore/core/src/util/exception.h \
+  /Users/arbruck/Downloads/PaperChase/ios/Pods/FirebaseFirestoreInternal/Firestore/core/include/firebase/firestore/firestore_errors.h \
+  /Users/arbruck/Downloads/PaperChase/ios/Pods/FirebaseFirestoreInternal/Firestore/core/src/util/string_format.h \
+  /Users/arbruck/Downloads/PaperChase/ios/Pods/FirebaseFirestoreInternal/Firestore/core/src/objc/objc_type_traits.h \
+  /Users/arbruck/Downloads/PaperChase/ios/Pods/FirebaseFirestoreInternal/Firestore/core/src/util/string_apple.h \
+  /Users/arbruck/Downloads/PaperChase/ios/build/Debug-iphoneos/abseil/absl.framework/Headers/strings/string_view.h \
+  /Users/arbruck/Downloads/PaperChase/ios/build/Debug-iphoneos/abseil/absl.framework/Headers/base/attributes.h \
+  /Users/arbruck/Downloads/PaperChase/ios/build/Debug-iphoneos/abseil/absl.framework/Headers/base/config.h \
+  /Users/arbruck/Downloads/PaperChase/ios/build/Debug-iphoneos/abseil/absl.framework/Headers/base/options.h \
+  /Users/arbruck/Downloads/PaperChase/ios/build/Debug-iphoneos/abseil/absl.framework/Headers/base/policy_checks.h \
+  /Users/arbruck/Downloads/PaperChase/ios/build/Debug-iphoneos/abseil/absl.framework/Headers/base/nullability.h \
+  /Users/arbruck/Downloads/PaperChase/ios/build/Debug-iphoneos/abseil/absl.framework/Headers/base/internal/nullability_impl.h \
+  /Users/arbruck/Downloads/PaperChase/ios/build/Debug-iphoneos/abseil/absl.framework/Headers/meta/type_traits.h \
+  /Users/arbruck/Downloads/PaperChase/ios/build/Debug-iphoneos/abseil/absl.framework/Headers/base/internal/throw_delegate.h \
+  /Users/arbruck/Downloads/PaperChase/ios/build/Debug-iphoneos/abseil/absl.framework/Headers/base/macros.h \
+  /Users/arbruck/Downloads/PaperChase/ios/build/Debug-iphoneos/abseil/absl.framework/Headers/base/optimization.h \
+  /Users/arbruck/Downloads/PaperChase/ios/build/Debug-iphoneos/abseil/absl.framework/Headers/base/port.h \
+  /Users/arbruck/Downloads/PaperChase/ios/Pods/FirebaseFirestoreInternal/Firestore/core/src/util/type_traits.h \
+  /Users/arbruck/Downloads/PaperChase/ios/build/Debug-iphoneos/abseil/absl.framework/Headers/strings/str_cat.h \
+  /Users/arbruck/Downloads/PaperChase/ios/build/Debug-iphoneos/abseil/absl.framework/Headers/strings/has_absl_stringify.h \
+  /Users/arbruck/Downloads/PaperChase/ios/build/Debug-iphoneos/abseil/absl.framework/Headers/strings/internal/resize_uninitialized.h \
+  /Users/arbruck/Downloads/PaperChase/ios/build/Debug-iphoneos/abseil/absl.framework/Headers/strings/internal/stringify_sink.h \
+  /Users/arbruck/Downloads/PaperChase/ios/build/Debug-iphoneos/abseil/absl.framework/Headers/strings/numbers.h \
+  /Users/arbruck/Downloads/PaperChase/ios/build/Debug-iphoneos/abseil/absl.framework/Headers/base/internal/endian.h \
+  /Users/arbruck/Downloads/PaperChase/ios/build/Debug-iphoneos/abseil/absl.framework/Headers/base/casts.h \
+  /Users/arbruck/Downloads/PaperChase/ios/build/Debug-iphoneos/abseil/absl.framework/Headers/base/internal/identity.h \
+  /Users/arbruck/Downloads/PaperChase/ios/build/Debug-iphoneos/abseil/absl.framework/Headers/base/internal/unaligned_access.h \
+  /Users/arbruck/Downloads/PaperChase/ios/build/Debug-iphoneos/abseil/absl.framework/Headers/numeric/bits.h \
+  /Users/arbruck/Downloads/PaperChase/ios/build/Debug-iphoneos/abseil/absl.framework/Headers/numeric/internal/bits.h \
+  /Users/arbruck/Downloads/PaperChase/ios/build/Debug-iphoneos/abseil/absl.framework/Headers/numeric/int128.h \
+  /Users/arbruck/Downloads/PaperChase/ios/build/Debug-iphoneos/abseil/absl.framework/Headers/numeric/int128_have_intrinsic.inc \
+  /Users/arbruck/Downloads/PaperChase/ios/Pods/FirebaseFirestoreInternal/Firestore/core/src/util/hard_assert.h

@@ -1,0 +1,23 @@
+moduledependenciestarget: \
+  /Users/arbruck/Downloads/PaperChase/ios/build/Debug-iphoneos/cloud_firestore/cloud_firestore.framework/Modules/module.modulemap \
+  /Users/arbruck/Downloads/PaperChase/ios/build/Debug-iphoneos/FirebaseFirestore/FirebaseFirestore.framework/Modules/module.modulemap \
+  /Users/arbruck/Downloads/PaperChase/ios/build/Debug-iphoneos/cloud_firestore/cloud_firestore.framework/Headers/cloud_firestore-umbrella.h \
+  /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS18.2.sdk/System/Library/Frameworks/UIKit.framework/Modules/module.modulemap \
+  /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS18.2.sdk/System/Library/Frameworks/Foundation.framework/Modules/module.modulemap \
+  /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS18.2.sdk/usr/include/TargetConditionals.modulemap \
+  /Users/arbruck/Downloads/PaperChase/ios/build/Debug-iphoneos/cloud_firestore/cloud_firestore.framework/Headers/FirestorePigeonParser.h \
+  /Users/arbruck/Downloads/PaperChase/ios/build/Debug-iphoneos/cloud_firestore/cloud_firestore.framework/Headers/FirestoreMessages.g.h \
+  /Users/arbruck/Downloads/PaperChase/ios/build/Debug-iphoneos/cloud_firestore/cloud_firestore.framework/Headers/FLTDocumentSnapshotStreamHandler.h \
+  /Users/arbruck/Downloads/PaperChase/ios/build/Debug-iphoneos/Flutter.framework/Modules/module.modulemap \
+  /Users/arbruck/Downloads/PaperChase/ios/build/Debug-iphoneos/cloud_firestore/cloud_firestore.framework/Headers/FLTFirebaseFirestoreExtension.h \
+  /Users/arbruck/Downloads/PaperChase/ios/build/Debug-iphoneos/cloud_firestore/cloud_firestore.framework/Headers/FLTFirebaseFirestoreReader.h \
+  /Users/arbruck/Downloads/PaperChase/ios/build/Debug-iphoneos/cloud_firestore/cloud_firestore.framework/Headers/FLTFirebaseFirestoreUtils.h \
+  /Users/arbruck/Downloads/PaperChase/ios/build/Debug-iphoneos/cloud_firestore/cloud_firestore.framework/Headers/FLTFirebaseFirestoreWriter.h \
+  /Users/arbruck/Downloads/PaperChase/ios/build/Debug-iphoneos/cloud_firestore/cloud_firestore.framework/Headers/FLTLoadBundleStreamHandler.h \
+  /Users/arbruck/Downloads/PaperChase/ios/build/Debug-iphoneos/cloud_firestore/cloud_firestore.framework/Headers/FLTQuerySnapshotStreamHandler.h \
+  /Users/arbruck/Downloads/PaperChase/ios/build/Debug-iphoneos/cloud_firestore/cloud_firestore.framework/Headers/FLTSnapshotsInSyncStreamHandler.h \
+  /Users/arbruck/Downloads/PaperChase/ios/build/Debug-iphoneos/cloud_firestore/cloud_firestore.framework/Headers/FLTTransactionStreamHandler.h \
+  /Users/arbruck/Downloads/PaperChase/ios/build/Debug-iphoneos/cloud_firestore/cloud_firestore.framework/Headers/CustomPigeonHeaderFirestore.h \
+  /Users/arbruck/Downloads/PaperChase/ios/build/Debug-iphoneos/cloud_firestore/cloud_firestore.framework/Headers/FLTFirebaseFirestorePlugin.h \
+  /Users/arbruck/Downloads/PaperChase/ios/build/Debug-iphoneos/firebase_core/firebase_core.framework/Modules/module.modulemap \
+  /Users/arbruck/Downloads/PaperChase/ios/build/Debug-iphoneos/firebase_core/firebase_core.framework/Headers/FLTFirebasePlugin.h

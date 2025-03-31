@@ -1,0 +1,69 @@
+{
+  "main_library": {
+    "exported_symbols": [
+      {
+        "data": {
+          "global": [
+            "_kFIRAppCheckTokenAutoRefreshEnabledInfoPlistKey",
+            "_FirebaseAppCheckVersionString",
+            "_FirebaseAppCheckVersionNumber",
+            "_kFIRLoggerAppCheckMessageCodeProviderIsMissing",
+            "_kFIRAppCheckTokenNotificationKey",
+            "_kFIRLoggerAppCheck",
+            "_FIRAppCheckErrorDomain",
+            "_kFIRLoggerAppCheckMessageCodeDebugToken",
+            "_kFIRLoggerAppCheckMessageDebugProviderIncompleteFIROptions",
+            "_kFIRLoggerAppCheckMessageDeviceCheckProviderIncompleteFIROptions",
+            "_kFIRLoggerAppCheckMessageCodeProviderFactoryIsMissing",
+            "_kFIRAppCheckTokenAutoRefreshEnabledUserDefaultsPrefix",
+            "_FIRAppCheckAppCheckTokenDidChangeNotification",
+            "_kFIRAppCheckAppNameNotificationKey"
+          ],
+          "objc_class": [
+            "FIRAppCheckDebugProviderFactory",
+            "FIRDeviceCheckProviderFactory",
+            "FIRAppCheckDebugProvider",
+            "FIRAppCheckErrorUtil",
+            "FIRInternalAppCheckProvider",
+            "PodsDummy_FirebaseAppCheck",
+            "FIRAppAttestProvider",
+            "FIRAppCheckSettings",
+            "FIRAppCheckValidator",
+            "FIRAppCheckComponent",
+            "FIRAppCheckTokenResult",
+            "FIRAppCheck",
+            "FIRAppCheckToken",
+            "FIRDeviceCheckProvider"
+          ]
+        },
+        "text": {
+          "global": [
+            "_FIRAppCheckDebugLog",
+            "_FIRInclude_FIRApp_AppCheck_Category",
+            "_FIRGetGACAppCheckLogLevel",
+            "_FIRInclude_FIRHeartbeatLogger_AppCheck_Category"
+          ]
+        }
+      }
+    ],
+    "flags": [
+      {
+        "attributes": [
+          "not_app_extension_safe"
+        ]
+      }
+    ],
+    "install_names": [
+      {
+        "name": "@rpath/FirebaseAppCheck.framework/FirebaseAppCheck"
+      }
+    ],
+    "target_info": [
+      {
+        "min_deployment": "13",
+        "target": "arm64-ios"
+      }
+    ]
+  },
+  "tapi_tbd_version": 5
+}

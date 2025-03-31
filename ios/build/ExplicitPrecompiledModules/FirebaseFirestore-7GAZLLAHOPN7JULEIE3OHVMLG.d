@@ -1,0 +1,38 @@
+moduledependenciestarget: \
+  /Users/arbruck/Downloads/PaperChase/ios/build/Pods.build/Debug-iphoneos/FirebaseFirestore.build/module.modulemap \
+  /Users/arbruck/Downloads/PaperChase/ios/Pods/Target\ Support\ Files/FirebaseFirestore/FirebaseFirestore-umbrella.h \
+  /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS18.2.sdk/System/Library/Frameworks/UIKit.framework/Modules/module.modulemap \
+  /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS18.2.sdk/System/Library/Frameworks/Foundation.framework/Modules/module.modulemap \
+  /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/clang/16/include/module.modulemap \
+  /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS18.2.sdk/usr/include/c_standard_library.modulemap \
+  /Users/arbruck/Downloads/PaperChase/ios/Pods/FirebaseFirestore/FirebaseFirestoreInternal/FirebaseFirestore/FIRAggregateField.h \
+  /Users/arbruck/Downloads/PaperChase/ios/build/Pods.build/Debug-iphoneos/FirebaseFirestoreInternal.build/module.modulemap \
+  /Users/arbruck/Downloads/PaperChase/ios/Pods/FirebaseFirestore/FirebaseFirestoreInternal/FirebaseFirestore/FIRAggregateQuery.h \
+  /Users/arbruck/Downloads/PaperChase/ios/Pods/FirebaseFirestore/FirebaseFirestoreInternal/FirebaseFirestore/FIRAggregateQuerySnapshot.h \
+  /Users/arbruck/Downloads/PaperChase/ios/Pods/FirebaseFirestore/FirebaseFirestoreInternal/FirebaseFirestore/FIRAggregateSource.h \
+  /Users/arbruck/Downloads/PaperChase/ios/Pods/FirebaseFirestore/FirebaseFirestoreInternal/FirebaseFirestore/FIRCollectionReference.h \
+  /Users/arbruck/Downloads/PaperChase/ios/Pods/FirebaseFirestore/FirebaseFirestoreInternal/FirebaseFirestore/FIRDocumentChange.h \
+  /Users/arbruck/Downloads/PaperChase/ios/Pods/FirebaseFirestore/FirebaseFirestoreInternal/FirebaseFirestore/FIRDocumentReference.h \
+  /Users/arbruck/Downloads/PaperChase/ios/Pods/FirebaseFirestore/FirebaseFirestoreInternal/FirebaseFirestore/FIRDocumentSnapshot.h \
+  /Users/arbruck/Downloads/PaperChase/ios/Pods/FirebaseFirestore/FirebaseFirestoreInternal/FirebaseFirestore/FirebaseFirestore.h \
+  /Users/arbruck/Downloads/PaperChase/ios/Pods/FirebaseFirestore/FirebaseFirestoreInternal/FirebaseFirestore/FIRFieldPath.h \
+  /Users/arbruck/Downloads/PaperChase/ios/Pods/FirebaseFirestore/FirebaseFirestoreInternal/FirebaseFirestore/FIRFieldValue.h \
+  /Users/arbruck/Downloads/PaperChase/ios/Pods/FirebaseFirestore/FirebaseFirestoreInternal/FirebaseFirestore/FIRFilter.h \
+  /Users/arbruck/Downloads/PaperChase/ios/Pods/FirebaseFirestore/FirebaseFirestoreInternal/FirebaseFirestore/FIRFirestore.h \
+  /Users/arbruck/Downloads/PaperChase/ios/Pods/FirebaseFirestore/FirebaseFirestoreInternal/FirebaseFirestore/FIRFirestoreErrors.h \
+  /Users/arbruck/Downloads/PaperChase/ios/Pods/FirebaseFirestore/FirebaseFirestoreInternal/FirebaseFirestore/FIRFirestoreSettings.h \
+  /Users/arbruck/Downloads/PaperChase/ios/Pods/FirebaseFirestore/FirebaseFirestoreInternal/FirebaseFirestore/FIRFirestoreSource.h \
+  /Users/arbruck/Downloads/PaperChase/ios/Pods/FirebaseFirestore/FirebaseFirestoreInternal/FirebaseFirestore/FIRGeoPoint.h \
+  /Users/arbruck/Downloads/PaperChase/ios/Pods/FirebaseFirestore/FirebaseFirestoreInternal/FirebaseFirestore/FIRListenerRegistration.h \
+  /Users/arbruck/Downloads/PaperChase/ios/Pods/FirebaseFirestore/FirebaseFirestoreInternal/FirebaseFirestore/FIRLoadBundleTask.h \
+  /Users/arbruck/Downloads/PaperChase/ios/Pods/FirebaseFirestore/FirebaseFirestoreInternal/FirebaseFirestore/FIRLocalCacheSettings.h \
+  /Users/arbruck/Downloads/PaperChase/ios/Pods/FirebaseFirestore/FirebaseFirestoreInternal/FirebaseFirestore/FIRPersistentCacheIndexManager.h \
+  /Users/arbruck/Downloads/PaperChase/ios/Pods/FirebaseFirestore/FirebaseFirestoreInternal/FirebaseFirestore/FIRQuery.h \
+  /Users/arbruck/Downloads/PaperChase/ios/Pods/FirebaseFirestore/FirebaseFirestoreInternal/FirebaseFirestore/FIRQuerySnapshot.h \
+  /Users/arbruck/Downloads/PaperChase/ios/Pods/FirebaseFirestore/FirebaseFirestoreInternal/FirebaseFirestore/FIRSnapshotListenOptions.h \
+  /Users/arbruck/Downloads/PaperChase/ios/Pods/FirebaseFirestore/FirebaseFirestoreInternal/FirebaseFirestore/FIRSnapshotMetadata.h \
+  /Users/arbruck/Downloads/PaperChase/ios/Pods/FirebaseFirestore/FirebaseFirestoreInternal/FirebaseFirestore/FIRTransaction.h \
+  /Users/arbruck/Downloads/PaperChase/ios/Pods/FirebaseFirestore/FirebaseFirestoreInternal/FirebaseFirestore/FIRTransactionOptions.h \
+  /Users/arbruck/Downloads/PaperChase/ios/Pods/FirebaseFirestore/FirebaseFirestoreInternal/FirebaseFirestore/FIRVectorValue.h \
+  /Users/arbruck/Downloads/PaperChase/ios/Pods/FirebaseFirestore/FirebaseFirestoreInternal/FirebaseFirestore/FIRWriteBatch.h \
+  /Users/arbruck/Downloads/PaperChase/ios/build/Debug-iphoneos/FirebaseFirestore/FirebaseFirestore.framework/Headers/FirebaseFirestore-Swift.h

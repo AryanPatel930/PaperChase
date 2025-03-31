@@ -1,0 +1,20 @@
+dependencies: \
+  /Users/arbruck/Downloads/PaperChase/ios/build/Pods.build/Debug-iphoneos/AppCheckCore.build/module.modulemap \
+  /Users/arbruck/Downloads/PaperChase/ios/Pods/AppCheckCore/AppCheckCore/Sources/Core/GACAppCheck.m \
+  /Users/arbruck/Downloads/PaperChase/ios/Pods/AppCheckCore/AppCheckCore/Sources/Public/AppCheckCore/GACAppCheck.h \
+  /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS.sdk/System/Library/Frameworks/Foundation.framework/Modules/module.modulemap \
+  /Users/arbruck/Downloads/PaperChase/ios/build/Pods.build/Debug-iphoneos/PromisesObjC.build/module.modulemap \
+  /Users/arbruck/Downloads/PaperChase/ios/Pods/PromisesObjC/Sources/FBLPromises/include/FBLPromises.h \
+  /Users/arbruck/Downloads/PaperChase/ios/Pods/AppCheckCore/AppCheckCore/Sources/Public/AppCheckCore/GACAppCheckErrors.h \
+  /Users/arbruck/Downloads/PaperChase/ios/Pods/AppCheckCore/AppCheckCore/Sources/Public/AppCheckCore/GACAppCheckProvider.h \
+  /Users/arbruck/Downloads/PaperChase/ios/Pods/AppCheckCore/AppCheckCore/Sources/Public/AppCheckCore/GACAppCheckSettings.h \
+  /Users/arbruck/Downloads/PaperChase/ios/Pods/AppCheckCore/AppCheckCore/Sources/Public/AppCheckCore/GACAppCheckToken.h \
+  /Users/arbruck/Downloads/PaperChase/ios/Pods/AppCheckCore/AppCheckCore/Sources/Public/AppCheckCore/GACAppCheckTokenDelegate.h \
+  /Users/arbruck/Downloads/PaperChase/ios/Pods/AppCheckCore/AppCheckCore/Sources/Public/AppCheckCore/GACAppCheckTokenResult.h \
+  /Users/arbruck/Downloads/PaperChase/ios/Pods/AppCheckCore/AppCheckCore/Sources/Core/Errors/GACAppCheckErrorUtil.h \
+  /Users/arbruck/Downloads/PaperChase/ios/Pods/AppCheckCore/AppCheckCore/Sources/Core/GACAppCheckLogger+Internal.h \
+  /Users/arbruck/Downloads/PaperChase/ios/Pods/AppCheckCore/AppCheckCore/Sources/Public/AppCheckCore/GACAppCheckLogger.h \
+  /Users/arbruck/Downloads/PaperChase/ios/Pods/AppCheckCore/AppCheckCore/Sources/Core/Storage/GACAppCheckStorage.h \
+  /Users/arbruck/Downloads/PaperChase/ios/Pods/AppCheckCore/AppCheckCore/Sources/Core/TokenRefresh/GACAppCheckTokenRefreshResult.h \
+  /Users/arbruck/Downloads/PaperChase/ios/Pods/AppCheckCore/AppCheckCore/Sources/Core/TokenRefresh/GACAppCheckTokenRefresher.h \
+  /Users/arbruck/Downloads/PaperChase/ios/Pods/AppCheckCore/AppCheckCore/Sources/Core/TokenRefresh/GACAppCheckTimer.h

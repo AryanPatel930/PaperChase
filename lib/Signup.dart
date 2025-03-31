@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'colors.dart';
 
 class SignupPage extends StatefulWidget {
   const SignupPage({super.key});
@@ -57,8 +58,24 @@ class _SignupPageState extends State<SignupPage> {
 
   @override
   Widget build(BuildContext context) {
+    final bool isDarkMode = Theme.of(context).brightness == Brightness.dark;
     return Scaffold(
-      appBar: AppBar(title: const Text('Sign Up')),
+      appBar: AppBar(
+        title: const Text(
+          'Sign Up',
+          style: TextStyle(
+            fontFamily: 'Impact', // Ensure "Impact" is available in your fonts
+            fontSize: 24, // Adjust size as needed
+            fontStyle: FontStyle.italic,
+            fontWeight: FontWeight.bold,
+            color: kPrimaryColor,
+          ),
+          ),
+        iconTheme: IconThemeData(
+        color: isDarkMode ? kDarkBackground : kLightBackground,
+      ),
+      foregroundColor: isDarkMode ? kDarkBackground : kLightBackground,
+        ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Form(
@@ -106,7 +123,16 @@ class _SignupPageState extends State<SignupPage> {
               const SizedBox(height: 20),
               _isLoading
                   ? const CircularProgressIndicator()
-                  : ElevatedButton(onPressed: _signUp, child: const Text('Sign Up')),
+                  : ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: isDarkMode ? kLightBackground : kDarkBackground, // Background color
+                      foregroundColor: isDarkMode ? kDarkBackground : kLightBackground, // Text color
+                      padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 15), // Padding
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10), // Rounded corners
+                      ),
+                    ),
+                    onPressed: _signUp, child: const Text('Sign Up')),
             ],
           ),
         ),

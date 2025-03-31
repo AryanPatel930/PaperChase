@@ -4,6 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'dart:io';
+import 'colors.dart';
 
 class ProfilePage extends StatefulWidget {
   const ProfilePage({super.key});
@@ -14,10 +15,7 @@ class ProfilePage extends StatefulWidget {
 
 class _ProfilePageState extends State<ProfilePage> {
   final TextEditingController _bioController = TextEditingController();
-  String _profileImageUrl = "";
-  String _studentId = "";
-  String _fullName = "";
-  File? _imageFile;
+  File? _imageFile; // Stores the picked image file
 
   @override
   void initState() {
@@ -25,21 +23,10 @@ class _ProfilePageState extends State<ProfilePage> {
     _loadUserProfile();
   }
 
-  Future<void> _loadUserProfile() async {
+  Future<DocumentSnapshot?> _loadUserProfile() async {
     User? user = FirebaseAuth.instance.currentUser;
-    if (user == null) return;
-
-    DocumentSnapshot userDoc =
-    await FirebaseFirestore.instance.collection('users').doc(user.uid).get();
-
-    if (userDoc.exists) {
-      setState(() {
-        _fullName = "${userDoc['first_name']} ${userDoc['last_name']}";
-        _studentId = "h#${userDoc['student_id']}";
-        _bioController.text = userDoc['bio'] ?? "";
-        _profileImageUrl = userDoc['profile_image'] ?? "";
-      });
-    }
+    if (user == null) return null;
+    return await FirebaseFirestore.instance.collection('users').doc(user.uid).get();
   }
 
   Future<void> _pickImage() async {
@@ -51,9 +38,7 @@ class _ProfilePageState extends State<ProfilePage> {
       return;
     }
 
-    final pickedFile =
-    await ImagePicker().pickImage(source: ImageSource.gallery);
-
+    final pickedFile = await ImagePicker().pickImage(source: ImageSource.gallery);
     if (pickedFile != null) {
       setState(() {
         _imageFile = File(pickedFile.path);
@@ -66,14 +51,15 @@ class _ProfilePageState extends State<ProfilePage> {
     User? user = FirebaseAuth.instance.currentUser;
     if (user == null || _imageFile == null) return;
 
-    // Normally, you would upload to Firebase Storage, but for now, we'll just store a placeholder path
+    // Normally, this would upload the image to Firebase Storage. 
+    // For now, we store the local file path in Firestore.
     await FirebaseFirestore.instance.collection('users').doc(user.uid).update({
       'profile_image': _imageFile!.path,
     });
 
-    setState(() {
-      _profileImageUrl = _imageFile!.path;
-    });
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(content: Text("Profile image uploaded successfully!")),
+    );
   }
 
   Future<void> _saveBio() async {
@@ -91,42 +77,119 @@ class _ProfilePageState extends State<ProfilePage> {
 
   @override
   Widget build(BuildContext context) {
+    final bool isDarkMode = Theme.of(context).brightness == Brightness.dark;
+
     return Scaffold(
-      appBar: AppBar(title: Text(_fullName)), // Show user's name
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          children: [
-            GestureDetector(
-              onTap: _pickImage,
-              child: CircleAvatar(
-                radius: 50,
-                backgroundImage: _profileImageUrl.isNotEmpty
-                    ? FileImage(File(_profileImageUrl))
-                    : null,
-                child: _profileImageUrl.isEmpty
-                    ? const Icon(Icons.add_a_photo, size: 50)
-                    : null,
+      appBar: AppBar(
+        title: FutureBuilder<DocumentSnapshot?>(
+          future: _loadUserProfile(),
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return const Text("Loading...");
+            }
+            if (!snapshot.hasData || !snapshot.data!.exists) {
+              return const Text("Profile Not Found");
+            }
+
+            var userDoc = snapshot.data!;
+            String fullName = "${userDoc['first_name']} ${userDoc['last_name']}";
+
+            return Text(
+              fullName,
+              style: TextStyle(
+                fontFamily: 'Impact',
+                fontSize: 24,
+                fontStyle: FontStyle.italic,
+                fontWeight: FontWeight.bold,
+                color: kPrimaryColor,
               ),
-            ),
-            const SizedBox(height: 10),
-            Text(_studentId, style: const TextStyle(fontSize: 16)), // Show Student ID
-            const SizedBox(height: 10),
-            TextField(
-              controller: _bioController,
-              maxLength: 256,
-              decoration: const InputDecoration(
-                labelText: "Bio",
-                border: OutlineInputBorder(),
-              ),
-            ),
-            const SizedBox(height: 10),
-            ElevatedButton(
-              onPressed: _saveBio,
-              child: const Text("Save Profile"),
-            ),
-          ],
+            );
+          },
         ),
+        iconTheme: IconThemeData(
+          color: isDarkMode ? kDarkBackground : kLightBackground,
+        ),
+      ),
+      body: FutureBuilder<DocumentSnapshot?>(
+        future: _loadUserProfile(),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const Center(child: CircularProgressIndicator());
+          }
+          if (!snapshot.hasData || !snapshot.data!.exists) {
+            return const Center(child: Text("Profile Not Found"));
+          }
+
+          var userDoc = snapshot.data!;
+          String fullName = "${userDoc['first_name']} ${userDoc['last_name']}";
+
+          return Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Column(
+              children: [
+                GestureDetector(
+                  onTap: _pickImage,
+                  child: CircleAvatar(
+                    radius: 50,
+                    backgroundColor: Colors.grey.shade300,
+                    child: const Icon(
+                      Icons.add_a_photo,
+                      size: 40,
+                      color: Colors.black54,
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 20),
+                Text(
+                  fullName,
+                  style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                ), // Show Full Name
+                const SizedBox(height: 10),
+                TextField(
+                  controller: _bioController,
+                  maxLength: 256,
+                  decoration: const InputDecoration(
+                    labelText: "Bio",
+                    border: OutlineInputBorder(),
+                  ),
+                ),
+                const SizedBox(height: 10),
+                ElevatedButton(
+                  onPressed: _saveBio,
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: isDarkMode ? kLightBackground : kDarkBackground,
+                    foregroundColor: isDarkMode ? kDarkBackground : kLightBackground,
+                    padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 15),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                  ),
+                  child: const Text("Save Profile"),
+                ),
+              ],
+            ),
+          );
+        },
+      ),
+      bottomNavigationBar: BottomNavigationBar(
+        backgroundColor: isDarkMode ? kLightBackground : kDarkBackground,
+        selectedItemColor: isDarkMode ? kDarkBackground : kLightBackground,
+        unselectedItemColor: isDarkMode ? kDarkBackground : kLightBackground,
+        currentIndex: 0, // Highlight the "Inbox" tab
+        items: const [
+          BottomNavigationBarItem(icon: Icon(Icons.home), label: "Home"),
+          BottomNavigationBarItem(icon: Icon(Icons.add), label: "Post"),
+          BottomNavigationBarItem(icon: Icon(Icons.mail), label: "Inbox"),
+        ],
+        onTap: (index) {
+          if (index == 0) {
+            Navigator.pushNamedAndRemoveUntil(context, '/', (route) => false);
+          } else if (index == 1) {
+            Navigator.pushNamed(context, '/post');
+          } else if (index == 2) {
+            Navigator.pushNamed(context, '/inbox'); // Stay on the same page
+          }
+        },
       ),
     );
   }

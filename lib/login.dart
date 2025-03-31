@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'forgot_password.dart';
+import 'colors.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -38,8 +39,24 @@ class _LoginPageState extends State<LoginPage> {
 
   @override
   Widget build(BuildContext context) {
+    final bool isDarkMode = Theme.of(context).brightness == Brightness.dark;
     return Scaffold(
-      appBar: AppBar(title: const Text('Login')),
+      appBar: AppBar(
+        title: const Text(
+          'Login',
+          style: TextStyle(
+            fontFamily: 'Impact', // Ensure "Impact" is available in your fonts
+            fontSize: 24, // Adjust size as needed
+            fontStyle: FontStyle.italic,
+            fontWeight: FontWeight.bold,
+            color: kPrimaryColor,
+          ),
+          ),
+        iconTheme: IconThemeData(
+        color: isDarkMode ? kDarkBackground : kLightBackground,
+      ),        
+      foregroundColor: isDarkMode ? kDarkBackground : kLightBackground,
+        ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Form(
@@ -60,6 +77,13 @@ class _LoginPageState extends State<LoginPage> {
                 validator: (value) => value!.isEmpty ? "Enter your password" : null,
               ),
               TextButton(
+                style: TextButton.styleFrom(
+                  foregroundColor:isDarkMode ? kLightBackground : kDarkBackground, // Text color
+                  padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 15), // Padding
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10), // Rounded corners
+                  ),
+                ),
                 onPressed: () {
                   Navigator.push(
                     context,
@@ -72,10 +96,28 @@ class _LoginPageState extends State<LoginPage> {
               const SizedBox(height: 20),
               _isLoading
                   ? const CircularProgressIndicator()
-                  : ElevatedButton(onPressed: _login, child: const Text('Login')),
+                  : ElevatedButton(
+                    onPressed: _login, child: const Text('Login'),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: isDarkMode ? kLightBackground : kDarkBackground, // Background color
+                      foregroundColor: isDarkMode ? kDarkBackground : kLightBackground, // Text color
+                      padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 15), // Padding
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10), // Rounded corners
+                      ),
+                    ),
+                  ),
               TextButton(
+                style: TextButton.styleFrom(
+                  foregroundColor: isDarkMode ? kLightBackground : kDarkBackground, // Text color
+                  padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 15), // Padding
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10), // Rounded corners
+                  ),
+                ),
                 onPressed: () => Navigator.pushNamed(context, '/signup'),
                 child: const Text("Don't have an account? Sign Up"),
+                
               ),
             ],
           ),

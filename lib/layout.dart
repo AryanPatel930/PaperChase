@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:paperchase_app/colors.dart';
 
 class AppLayout extends StatelessWidget {
   final Widget child;
@@ -43,9 +44,9 @@ class CustomFooter extends StatelessWidget {
   Widget build(BuildContext context) {
     return BottomNavigationBar(
       currentIndex: currentIndex,
-      backgroundColor: isDarkMode ? Colors.white : Colors.black,
-      selectedItemColor: isDarkMode ? Colors.black : Colors.white,
-      unselectedItemColor: Colors.grey,
+      backgroundColor: isDarkMode ? kLightBackground : kDarkBackground,
+      selectedItemColor: kPrimaryColor,
+      unselectedItemColor: isDarkMode ? kDarkBackground : kLightBackground,
       items: const [
         BottomNavigationBarItem(icon: Icon(Icons.home), label: "Home"),
         BottomNavigationBarItem(icon: Icon(Icons.add), label: "Post"),

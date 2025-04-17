@@ -1,2 +1,2 @@
 # PaperChase
-**Developers Abdallah, Kerryn, Safin, Allie, Leo**
+**Developers Aryan, Abdallah, Kerryn, Safin, Allie, Leo**

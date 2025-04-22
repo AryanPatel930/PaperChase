@@ -7,14 +7,18 @@ import 'NavBar.dart';
 
 class BookDetailsPage extends StatelessWidget {
   final Map<String, dynamic> book;
+  final String bookId;
 
-  const BookDetailsPage({super.key, required this.book});
+
+  const BookDetailsPage({super.key, required this.book, required this.bookId});
 
   @override
   Widget build(BuildContext context) {
+    
     final bool isDarkMode = Theme.of(context).brightness == Brightness.dark;
     final currentUser = FirebaseAuth.instance.currentUser;
     final isMyBook = currentUser?.uid == book['userId'];
+
 
     final title = book['title'] ?? 'No title available';
     final author = book['author'] ?? 'No author available';
@@ -28,6 +32,7 @@ class BookDetailsPage extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
+        automaticallyImplyLeading: true,
         iconTheme: IconThemeData(
           color: isDarkMode ? kDarkBackground : kLightBackground,
         ),
@@ -42,7 +47,7 @@ class BookDetailsPage extends StatelessWidget {
           ),
         ),
       ),
-      drawer: const NavBar(),
+      
       body: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.all(16.0),
@@ -68,7 +73,26 @@ class BookDetailsPage extends StatelessWidget {
                   style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
               Text(description, style: const TextStyle(fontSize: 16)),
               const SizedBox(height: 24),
-              if (!isMyBook && currentUser != null)
+              if (isMyBook && currentUser != null)
+                SizedBox(
+                  width: double.infinity,
+                  child: ElevatedButton(
+                    onPressed: () => _confirmAndDeleteBook(context, bookId),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.red,
+                      padding: const EdgeInsets.symmetric(vertical: 16),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                    ),
+                    child: const Text(
+                      'Delete Book',
+                      style: TextStyle(fontSize: 18, color: Colors.white),
+                    ),
+                  ),
+                )
+
+              else if (!isMyBook && currentUser != null)
                 SizedBox(
                   width: double.infinity,
                   child: ElevatedButton(
@@ -86,7 +110,9 @@ class BookDetailsPage extends StatelessWidget {
                       style: TextStyle(fontSize: 18, color: Colors.white),
                     ),
                   ),
+                  
                 )
+                
               else if (currentUser == null)
                 Center(
                   child: TextButton(
@@ -127,9 +153,14 @@ class BookDetailsPage extends StatelessWidget {
     );
   }
 
+  
+
   Future<void> _contactSeller(
+    
       BuildContext context, String sellerId, String bookTitle) async {
     final currentUser = FirebaseAuth.instance.currentUser;
+
+    
     if (currentUser == null) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Please log in to contact the seller')),
@@ -199,6 +230,31 @@ class BookDetailsPage extends StatelessWidget {
       }
     }
   }
+
+  void _confirmAndDeleteBook(BuildContext context, String bookId) async {
+    final shouldDelete = await showDialog<bool>(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Confirm Deletion'),
+        content: const Text('Are you sure you want to delete this book?'),
+        actions: [
+          TextButton(onPressed: () => Navigator.pop(context, false), child: const Text('Cancel')),
+          TextButton(onPressed: () => Navigator.pop(context, true), child: const Text('Delete')),
+        ],
+      ),
+    );
+
+    if (shouldDelete == true) {
+      await FirebaseFirestore.instance.collection('books').doc(bookId).delete();
+      if (context.mounted) {
+        Navigator.pop(context);
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Book removed successfully')),
+        );
+      }
+    }
+  }
+
 
   String _formatPrice(dynamic price) {
     if (price == null) return '0.00';

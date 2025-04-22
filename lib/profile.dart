@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:paperchase_app/book_detail_page.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'dart:io';
 import 'colors.dart';
@@ -155,7 +156,9 @@ class ProfilePage extends StatelessWidget {
                       return const Center(child: CircularProgressIndicator());
                     }
 
-                    final books = booksSnapshot.data?.docs ?? [];
+                    final books = booksSnapshot.data!.docs;
+                    
+
 
                     if (books.isEmpty) {
                       return Text(
@@ -182,6 +185,7 @@ class ProfilePage extends StatelessWidget {
                           physics: const NeverScrollableScrollPhysics(),
                           itemCount: books.length,
                           itemBuilder: (context, index) {
+                            final doc = books[index];
                             final book = books[index].data() as Map<String, dynamic>;
                             return Card(
                               color: isDarkMode ? Colors.grey[900] : Colors.white,
@@ -204,11 +208,14 @@ class ProfilePage extends StatelessWidget {
                                     fontWeight: FontWeight.bold,
                                   ),
                                 ),
+                                 
+
                                 onTap: () {
-                                  Navigator.pushNamed(
+                                  Navigator.push(
                                     context,
-                                    '/book_details',
-                                    arguments: books[index].id,
+                                    MaterialPageRoute(
+                                      builder: (context) => BookDetailsPage(book: book, bookId: doc.id ),
+                                    ),
                                   );
                                 },
                               ),

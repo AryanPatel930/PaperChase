@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
+import 'package:paperchase_app/chat_page.dart';
 import 'colors.dart';
 import 'NavBar.dart';
 
@@ -97,7 +98,7 @@ class BookDetailsPage extends StatelessWidget {
                   width: double.infinity,
                   child: ElevatedButton(
                     onPressed: () =>
-                        _contactSeller(context, book['userId'], title),
+                        _contactSeller(context, book['userId'], title, bookId),
                     style: ElevatedButton.styleFrom(
                       backgroundColor: kPrimaryColor,
                       padding: const EdgeInsets.symmetric(vertical: 16),
@@ -155,12 +156,8 @@ class BookDetailsPage extends StatelessWidget {
 
   
 
-  Future<void> _contactSeller(
-    
-      BuildContext context, String sellerId, String bookTitle) async {
+  Future<void> _contactSeller(BuildContext context, String sellerId, String bookTitle, String bookId) async {
     final currentUser = FirebaseAuth.instance.currentUser;
-
-    
     if (currentUser == null) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Please log in to contact the seller')),
@@ -170,18 +167,25 @@ class BookDetailsPage extends StatelessWidget {
 
     try {
       final users = [currentUser.uid, sellerId]..sort();
-      final chatRoomId = users.join('_');
+      final chatRoomId = "${bookId}_${users.join('_')}"; // Ensures uniqueness per book
 
-      final existingChat = await FirebaseFirestore.instance
-          .collection('chats')
-          .doc(chatRoomId)
+      final sellerDoc = await FirebaseFirestore.instance
+          .collection('users')
+          .doc(sellerId)
           .get();
+
+      final sellerName = sellerDoc.exists
+          ? "${sellerDoc['first_name']} ${sellerDoc['last_name']}"
+          : "Unknown Seller";
+
+      final chatRef = FirebaseFirestore.instance.collection('chats').doc(chatRoomId);
 
       final chatData = {
         'users': users,
+        'bookId': bookId,
+        'bookTitle': bookTitle,
         'lastMessage': 'Hi! Is this book still available?',
         'lastMessageTime': FieldValue.serverTimestamp(),
-        'bookTitle': bookTitle,
         'createdAt': FieldValue.serverTimestamp(),
         'participants': {
           currentUser.uid: true,
@@ -189,47 +193,40 @@ class BookDetailsPage extends StatelessWidget {
         },
       };
 
+      final existingChat = await chatRef.get();
       if (existingChat.exists) {
-        await FirebaseFirestore.instance
-            .collection('chats')
-            .doc(chatRoomId)
-            .update({
+        await chatRef.update({
           'lastMessage': chatData['lastMessage'],
           'lastMessageTime': chatData['lastMessageTime'],
         });
       } else {
-        await FirebaseFirestore.instance
-            .collection('chats')
-            .doc(chatRoomId)
-            .set(chatData);
+        await chatRef.set(chatData);
       }
 
-      await FirebaseFirestore.instance
-          .collection('chats')
-          .doc(chatRoomId)
-          .collection('messages')
-          .add({
+      await chatRef.collection('messages').add({
         'senderId': currentUser.uid,
         'message': 'Hi! Is this book still available?',
         'timestamp': FieldValue.serverTimestamp(),
+        'read': false,
       });
 
-      if (context.mounted) {
-        Navigator.pushReplacementNamed(context, '/inbox');
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Chat started with the seller')),
-        );
-      }
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => StrictChatPage(
+            chatId: chatRoomId,
+            otherUserName: sellerName,
+          ),
+        ),
+      );
     } catch (e) {
-      debugPrint("Error contacting seller: $e");
-      if (context.mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-              content: Text('Failed to contact seller. Please try again.')),
-        );
-      }
+      debugPrint('Error starting chat: $e');
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Failed to contact seller. Please try again.')),
+      );
     }
   }
+
 
   void _confirmAndDeleteBook(BuildContext context, String bookId) async {
     final shouldDelete = await showDialog<bool>(

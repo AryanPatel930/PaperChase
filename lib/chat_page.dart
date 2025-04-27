@@ -2,27 +2,24 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:paperchase_app/book_detail_page.dart';
 import 'colors.dart';
 
 class StrictChatPage extends StatefulWidget {
   final String chatId;
+  //final String bookId;
   final String otherUserName;
-  final List<String> predefinedMessages;
+  final String currentUserId;
+  final String sellerId;
+
 
   const StrictChatPage({
     Key? key,
     required this.chatId,
     required this.otherUserName,
-    this.predefinedMessages = const [
-      "Is this still available?",
-      "When can we meet?",
-      "I'll take it",
-      "Thanks!",
-      "Hello",
-      "Can you hold it for me?",
-      "What's your lowest price?",
-    ],
-  }) : super(key: key);
+    required this.currentUserId,
+    required this.sellerId,
+    }) : super(key: key);
 
   @override
   _StrictChatPageState createState() => _StrictChatPageState();
@@ -32,6 +29,32 @@ class _StrictChatPageState extends State<StrictChatPage> {
   final ScrollController _scrollController = ScrollController();
   final TextEditingController _messageController = TextEditingController();
   String? _bookTitle;
+  String? _bookId;
+
+List<String> get predefinedMessages {
+    final currentUser = FirebaseAuth.instance.currentUser;
+    final email = currentUser?.email ?? "your email";
+    if (widget.currentUserId == widget.sellerId) {
+      return [
+        "Yes, it's still available.",
+        "Thanks!",
+        "How about we meet this weekend?",
+        "That a deal!",
+        "Yes, I will hold it",
+        "Contact me at $email"
+
+      ];
+    } else {
+      return [
+        "Is this still available?",
+        "When can we meet?",
+        "I'll take it",
+        "Thanks!",
+        "Can you hold it for me?",
+        "Contact me at $email",
+      ];
+    }
+  }
 
   @override
   void initState() {
@@ -52,10 +75,11 @@ class _StrictChatPageState extends State<StrictChatPage> {
           .collection('chats')
           .doc(widget.chatId)
           .get();
-      
+
       if (doc.exists) {
         setState(() {
           _bookTitle = doc.data()?['bookTitle'] as String?;
+          _bookId = doc.data()?['bookId'] as String?;
         });
       }
     } catch (e) {
@@ -111,7 +135,8 @@ class _StrictChatPageState extends State<StrictChatPage> {
     final backgroundColor2 = isDarkMode ? kLightBackground : kDarkBackground;
     final textColor = isDarkMode ? kDarkText : kLightText;
     final textColor2 = isDarkMode ? kLightText : kDarkText;
-    final messageBackgroundOther = isDarkMode ? Colors.grey[800] : Colors.grey[200];
+    final messageBackgroundOther = isDarkMode ? Colors.grey[800] : Colors
+        .grey[200];
 
     return Scaffold(
       appBar: AppBar(
@@ -176,7 +201,8 @@ class _StrictChatPageState extends State<StrictChatPage> {
                     final text = data['message'] as String? ?? '';
                     final senderId = data['senderId'] as String? ?? '';
                     final currentUser = FirebaseAuth.instance.currentUser;
-                    final isMe = currentUser != null && senderId == currentUser.uid;
+                    final isMe = currentUser != null &&
+                        senderId == currentUser.uid;
 
                     return Container(
                       margin: const EdgeInsets.symmetric(vertical: 4),
@@ -187,7 +213,10 @@ class _StrictChatPageState extends State<StrictChatPage> {
                         children: [
                           Container(
                             constraints: BoxConstraints(
-                              maxWidth: MediaQuery.of(context).size.width * 0.75,
+                              maxWidth: MediaQuery
+                                  .of(context)
+                                  .size
+                                  .width * 0.75,
                             ),
                             padding: const EdgeInsets.symmetric(
                               horizontal: 16,
@@ -216,48 +245,78 @@ class _StrictChatPageState extends State<StrictChatPage> {
             ),
           ),
           Container(
-            padding: const EdgeInsets.all(16),
-            margin: const EdgeInsets.only(top: 2),
-            width: double.infinity,
-            decoration: BoxDecoration(
-              color: backgroundColor2,
-              border: Border(
-                top: BorderSide(
-                  color: backgroundColor.withOpacity(0.2),
-                ),
+  padding: const EdgeInsets.all(16),
+  margin: const EdgeInsets.only(top: 2),
+  width: double.infinity,
+  decoration: BoxDecoration(
+    color: backgroundColor2,
+    border: Border(
+      top: BorderSide(
+        color: backgroundColor.withOpacity(0.2),
+      ),
+    ),
+  ),
+  child: Column(
+    crossAxisAlignment: CrossAxisAlignment.start,
+    children: [
+      Text(
+        'Quick replies:',
+        style: TextStyle(
+          color: textColor2.withOpacity(0.7),
+          fontSize: 14,
+        ),
+      ),
+
+      // Only show the Confirmed button if the current user is the seller
+      if (widget.currentUserId == widget.sellerId)
+        SizedBox(
+          width: double.infinity,
+          child: ElevatedButton(
+            onPressed: () => _confirmAndCompletePurchase(context),
+            style: ElevatedButton.styleFrom(
+              backgroundColor: Colors.lightGreenAccent,
+              padding: const EdgeInsets.symmetric(vertical: 16),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(12),
               ),
             ),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  'Quick replies:',
-                  style: TextStyle(
-                    color: textColor2.withOpacity(0.7),
-                    fontSize: 14,
-                  ),
-                ),
-                const SizedBox(height: 12),
-                Wrap(
-                  spacing: 12,
-                  runSpacing: 12,
-                  children: widget.predefinedMessages.map((msg) {
-                    return ActionChip(
-                      label: Text(msg),
-                      onPressed: () => _sendMessage(msg),
-                      backgroundColor: backgroundColor,
-                      labelStyle: TextStyle(
-                        color: textColor,
-                      ),
-                    );
-                  }).toList(),
-                ),
-                const SizedBox(height: 12),
-              ],
+            child: const Text(
+              'Confirmed!',
+              style: TextStyle(fontSize: 18, color: kLightText),
             ),
           ),
+        ),
+      if (widget.currentUserId == widget.sellerId)
+        const SizedBox(height: 12),
+
+      Wrap(
+        spacing: 12,
+        runSpacing: 12,
+        children: predefinedMessages.map((msg) {
+          return ActionChip(
+            label: Text(msg),
+            onPressed: () => _sendMessage(msg),
+            backgroundColor: backgroundColor,
+            labelStyle: TextStyle(color: textColor,),
+          );
+        }).toList(),
+      ),
+      const SizedBox(height: 12),
+    ],
+  ),
+),
         ],
       ),
+    );
+  }
+
+  void _confirmAndCompletePurchase(BuildContext context) async {
+    await FirebaseFirestore.instance.collection('books').doc(_bookId).delete();
+    //await FirebaseFirestore.instance.collection('chats').doc(widget.chatId).collection('messages').doc().delete();
+    await FirebaseFirestore.instance.collection('chats').doc(widget.chatId).delete();
+    Navigator.pop(context);
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(content: Text('Transaction completed!')),
     );
   }
 }

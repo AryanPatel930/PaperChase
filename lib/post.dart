@@ -7,6 +7,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'colors.dart';
+import 'NavBar.dart';
 
 class PostBookPage extends StatefulWidget {
   @override
@@ -137,6 +138,7 @@ Future<String?> uploadImageToImgur(File imageFile) async {
   Widget build(BuildContext context) {
     final bool isDarkMode = Theme.of(context).brightness == Brightness.dark;
     return Scaffold(
+      drawer: NavBar(),
       appBar: AppBar(
         iconTheme: IconThemeData(
         color: isDarkMode ? kDarkBackground : kLightBackground,

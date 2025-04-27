@@ -3,9 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'firebase_options.dart';
-import 'package:http/http.dart' as http;
-import 'dart:convert';
-import 'package:url_launcher/url_launcher.dart';
 import 'login.dart';
 import 'signup.dart';
 import 'profile.dart';
@@ -14,7 +11,6 @@ import 'inbox.dart';
 import 'package:firebase_app_check/firebase_app_check.dart';
 import 'colors.dart';
 import 'utils.dart';
-import 'home.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'NavBar.dart';
 import 'book_detail_page.dart';
@@ -185,7 +181,8 @@ class _HomePageState extends State<HomePage> {
     }).toList();
 
     setState(() {
-      _books = filteredBooks.map((doc) => doc.data()).toList();
+      _books = filteredBooks;
+
     });
   } catch (e) {
     print("Error searching books: $e");
@@ -202,7 +199,8 @@ class _HomePageState extends State<HomePage> {
         .get();
 
     setState(() {
-      _books = snapshot.docs.map((doc) => doc.data()).toList();
+      _books = snapshot.docs;
+
     });
   } catch (e) {
     print("Error fetching recent books: $e");
@@ -357,21 +355,29 @@ String _filterBy = 'Latest Posted'; // Default filter option
                 itemCount: _books.length,
                 itemBuilder: (context, index) {
                   final book = _books[index];
+                  final bookId = book.id;
+                  final data = book.data() as Map<String, dynamic>;
                     
-                  final title = book['title'] ?? "Unknown Title";
-                  final author = book['author'] ?? "No author available";
-                  final thumbnail = book['imageUrl'] ?? "https://via.placeholder.com/50";
+                  final title = book.data()['title'] ?? "Unknown Title";
+                  final author = book.data()['author'] ?? "No author available";
+                  final thumbnail = book.data()['imageUrl'] ?? "https://via.placeholder.com/50";
+                  final price = book.data()['price'];
+
+                  
+                  
+                  
                   
                   return ListTile(
                     leading: Image.network(thumbnail, width: 50, height: 50, fit: BoxFit.cover),
                     title: Text(title),
-                    subtitle: Text(author),
+                    subtitle: Text('$author - \$$price - ${book.data()['condition'] ?? 'Condition not available'}'),
+
                     onTap: () {
                       if (_isLoggedIn) {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (context) => BookDetailsPage(book: book), // Pass book data
+                            builder: (context) => BookDetailsPage(book: book.data() as Map<String, dynamic>, bookId: bookId), // Pass book data
                           ),
                         );
                       } else {

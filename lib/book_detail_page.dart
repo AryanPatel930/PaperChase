@@ -2,19 +2,24 @@ import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
+import 'package:paperchase_app/chat_page.dart';
 import 'colors.dart';
-import 'NavBar.dart';
+
 
 class BookDetailsPage extends StatelessWidget {
   final Map<String, dynamic> book;
+  final String bookId;
 
-  const BookDetailsPage({super.key, required this.book});
+
+  const BookDetailsPage({super.key, required this.book, required this.bookId});
 
   @override
   Widget build(BuildContext context) {
+    
     final bool isDarkMode = Theme.of(context).brightness == Brightness.dark;
     final currentUser = FirebaseAuth.instance.currentUser;
     final isMyBook = currentUser?.uid == book['userId'];
+    
 
     final title = book['title'] ?? 'No title available';
     final author = book['author'] ?? 'No author available';
@@ -28,6 +33,7 @@ class BookDetailsPage extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
+        automaticallyImplyLeading: true,
         iconTheme: IconThemeData(
           color: isDarkMode ? kDarkBackground : kLightBackground,
         ),
@@ -42,7 +48,7 @@ class BookDetailsPage extends StatelessWidget {
           ),
         ),
       ),
-      drawer: const NavBar(),
+      
       body: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.all(16.0),
@@ -68,12 +74,31 @@ class BookDetailsPage extends StatelessWidget {
                   style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
               Text(description, style: const TextStyle(fontSize: 16)),
               const SizedBox(height: 24),
-              if (!isMyBook && currentUser != null)
+              if (isMyBook && currentUser != null)
+                SizedBox(
+                  width: double.infinity,
+                  child: ElevatedButton(
+                    onPressed: () => _confirmAndDeleteBook(context, bookId),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.red,
+                      padding: const EdgeInsets.symmetric(vertical: 16),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                    ),
+                    child: const Text(
+                      'Delete Book',
+                      style: TextStyle(fontSize: 18, color: Colors.white),
+                    ),
+                  ),
+                )
+
+              else if (!isMyBook && currentUser != null)
                 SizedBox(
                   width: double.infinity,
                   child: ElevatedButton(
                     onPressed: () =>
-                        _contactSeller(context, book['userId'], title),
+                        _contactSeller(context, book, bookId),
                     style: ElevatedButton.styleFrom(
                       backgroundColor: kPrimaryColor,
                       padding: const EdgeInsets.symmetric(vertical: 16),
@@ -86,7 +111,9 @@ class BookDetailsPage extends StatelessWidget {
                       style: TextStyle(fontSize: 18, color: Colors.white),
                     ),
                   ),
+                  
                 )
+                
               else if (currentUser == null)
                 Center(
                   child: TextButton(
@@ -127,78 +154,111 @@ class BookDetailsPage extends StatelessWidget {
     );
   }
 
-  Future<void> _contactSeller(
-      BuildContext context, String sellerId, String bookTitle) async {
-    final currentUser = FirebaseAuth.instance.currentUser;
-    if (currentUser == null) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Please log in to contact the seller')),
-      );
-      return;
+  
+
+  Future<void> _contactSeller(BuildContext context, Map<String, dynamic> book, String bookId) async {
+  final currentUser = FirebaseAuth.instance.currentUser;
+  if (currentUser == null) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(content: Text('Please log in to contact the seller')),
+    );
+    return;
+  }
+
+  final sellerId = book['userId']; // 📌 This is the user who posted the book
+  final isBuyer = currentUser.uid != sellerId;
+  final rolePrefix = isBuyer ? 'buyer' : 'seller';
+  final users = [currentUser.uid, sellerId]..sort();
+  final chatRoomId = "${rolePrefix}_${bookId}_${users.join('_')}";
+
+  try {
+    final sellerDoc = await FirebaseFirestore.instance
+        .collection('users')
+        .doc(sellerId)
+        .get();
+
+    final sellerName = sellerDoc.exists
+        ? "${sellerDoc['first_name']} ${sellerDoc['last_name']}"
+        : "Unknown Seller";
+
+    final chatRef = FirebaseFirestore.instance.collection('chats').doc(chatRoomId);
+
+    final chatData = {
+      'users': users,
+      'bookId': bookId,
+      'bookTitle': book['title'],
+      'lastMessage': 'Hi! Is this book still available?',
+      'lastMessageTime': FieldValue.serverTimestamp(),
+      'createdAt': FieldValue.serverTimestamp(),
+      'participants': {
+        currentUser.uid: true,
+        sellerId: true,
+      },
+      'sellerId': sellerId,
+      'buyerId': isBuyer ? currentUser.uid : null, // null if seller is messaging
+    };
+
+    final existingChat = await chatRef.get();
+    if (existingChat.exists) {
+      await chatRef.update({
+        'lastMessage': chatData['lastMessage'],
+        'lastMessageTime': chatData['lastMessageTime'],
+      });
+    } else {
+      await chatRef.set(chatData);
     }
 
-    try {
-      final users = [currentUser.uid, sellerId]..sort();
-      final chatRoomId = users.join('_');
+    await chatRef.collection('messages').add({
+      'senderId': currentUser.uid,
+      'message': 'Hi! Is this book still available?',
+      'timestamp': FieldValue.serverTimestamp(),
+      'read': false,
+    });
 
-      final existingChat = await FirebaseFirestore.instance
-          .collection('chats')
-          .doc(chatRoomId)
-          .get();
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => StrictChatPage(
+          chatId: chatRoomId,
+          otherUserName: sellerName,
+          currentUserId: currentUser.uid,
+          sellerId: sellerId,
+        ),
+      ),
+    );
+  } catch (e) {
+    debugPrint('Error starting chat: $e');
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(content: Text('Failed to contact seller. Please try again.')),
+    );
+  }
+}
 
-      final chatData = {
-        'users': users,
-        'lastMessage': 'Hi! Is this book still available?',
-        'lastMessageTime': FieldValue.serverTimestamp(),
-        'bookTitle': bookTitle,
-        'createdAt': FieldValue.serverTimestamp(),
-        'participants': {
-          currentUser.uid: true,
-          sellerId: true,
-        },
-      };
 
-      if (existingChat.exists) {
-        await FirebaseFirestore.instance
-            .collection('chats')
-            .doc(chatRoomId)
-            .update({
-          'lastMessage': chatData['lastMessage'],
-          'lastMessageTime': chatData['lastMessageTime'],
-        });
-      } else {
-        await FirebaseFirestore.instance
-            .collection('chats')
-            .doc(chatRoomId)
-            .set(chatData);
-      }
+  void _confirmAndDeleteBook(BuildContext context, String bookId) async {
+    final shouldDelete = await showDialog<bool>(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Confirm Deletion'),
+        content: const Text('Are you sure you want to delete this book?'),
+        actions: [
+          TextButton(onPressed: () => Navigator.pop(context, false), child: const Text('Cancel')),
+          TextButton(onPressed: () => Navigator.pop(context, true), child: const Text('Delete')),
+        ],
+      ),
+    );
 
-      await FirebaseFirestore.instance
-          .collection('chats')
-          .doc(chatRoomId)
-          .collection('messages')
-          .add({
-        'senderId': currentUser.uid,
-        'message': 'Hi! Is this book still available?',
-        'timestamp': FieldValue.serverTimestamp(),
-      });
-
+    if (shouldDelete == true) {
+      await FirebaseFirestore.instance.collection('books').doc(bookId).delete();
       if (context.mounted) {
-        Navigator.pushReplacementNamed(context, '/inbox');
+        Navigator.pop(context);
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Chat started with the seller')),
-        );
-      }
-    } catch (e) {
-      debugPrint("Error contacting seller: $e");
-      if (context.mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-              content: Text('Failed to contact seller. Please try again.')),
+          const SnackBar(content: Text('Book removed successfully')),
         );
       }
     }
   }
+
 
   String _formatPrice(dynamic price) {
     if (price == null) return '0.00';

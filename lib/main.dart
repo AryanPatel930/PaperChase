@@ -286,6 +286,7 @@ String _filterBy = 'Latest Posted'; // Default filter option
     ),
     const SizedBox(width: 8), // Small space between search and sort
     // Sort button
+    if(!_searchController.text.isEmpty) // Only show if search is not empty
     GestureDetector(
       onTap: () => showModalBottomSheet(
         context: context,

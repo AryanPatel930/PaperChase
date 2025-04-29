@@ -1,0 +1,23 @@
+flutter_native_splash:
+  color: "#FFFFFF" 
+  image: assets/text-logo-1.png  # Your logo
+
+  # Android 12+
+  android_12:
+    image: assets/text-logo-1.png
+    color: "#FFFFFF"
+    icon_background_color: "#FFFFFF"
+
+  # Ensuring logo fits correctly
+  android_gravity: center           # Centers the logo on Android
+  ios_content_mode: scaleAspectFit  # Ensures the image fits properly on iOS
+
+  # Enable fullscreen mode to avoid cropping issues
+  fullscreen: true
+
+  # Optional: Add dark mode support
+  color_dark: "#000000" 
+  image_dark: assets/text-logo-1.png
+
+  # Web settings (optional, remove if not using web)
+  web: false

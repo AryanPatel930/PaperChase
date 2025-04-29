@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'colors.dart';
 
 class ForgotPasswordPage extends StatefulWidget {
   @override
@@ -32,8 +33,24 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
 
   @override
   Widget build(BuildContext context) {
+    final bool isDarkMode = Theme.of(context).brightness == Brightness.dark;
     return Scaffold(
-      appBar: AppBar(title: Text("Forgot Password")),
+      appBar: AppBar(
+        iconTheme: IconThemeData(
+        color: isDarkMode ? kDarkBackground : kLightBackground,
+      ),
+        title: const Text(
+          "Forgot Password",
+          style: TextStyle(
+            fontFamily: 'Impact', // Ensure "Impact" is available in your fonts
+            fontSize: 24, // Adjust size as needed
+            fontStyle: FontStyle.italic,
+            fontWeight: FontWeight.bold,
+            color: kPrimaryColor,
+          ),
+        ),
+        foregroundColor: isDarkMode ? kDarkBackground : kLightBackground,
+        ),
       body: Padding(
         padding: EdgeInsets.all(16.0),
         child: Column(
@@ -51,6 +68,14 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
             ElevatedButton(
               onPressed: _resetPassword,
               child: Text("Reset Password"),
+              style: ElevatedButton.styleFrom(
+                      backgroundColor: isDarkMode ? kLightBackground : kDarkBackground, // Background color
+                      foregroundColor: isDarkMode ? kDarkBackground : kLightBackground, // Text color
+                      padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 15), // Padding
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10), // Rounded corners
+                      ),
+              ),
             ),
           ],
         ),

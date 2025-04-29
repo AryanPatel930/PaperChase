@@ -32,7 +32,6 @@ void main() async {
   if (isFirstLaunch) {
     await prefs.setBool('first_launch', false);
   }
-  // Add a delay to ensure the GIF plays after the native splash screen
   await Future.delayed(const Duration(milliseconds: 500));
   runApp(MyApp(isFirstLaunch: isFirstLaunch));
 }
@@ -46,11 +45,11 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  bool _isDarkMode = false; // Default to Light Mode
+  bool _isDarkMode = false;
 
   void _toggleTheme() {
     setState(() {
-      _isDarkMode = !_isDarkMode; // Toggle between Light & Dark Mode
+      _isDarkMode = !_isDarkMode;
     });
   }
 
@@ -58,7 +57,6 @@ class _MyAppState extends State<MyApp> {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'PaperChase',
-      
       theme: ThemeData(
         primaryColor: kPrimaryColor,
         brightness: Brightness.light,
@@ -68,7 +66,7 @@ class _MyAppState extends State<MyApp> {
         ),
         appBarTheme: const AppBarTheme(
           backgroundColor: kDarkBackground,
-          titleTextStyle: TextStyle(color: Colors.white, fontSize: 20, fontWeight: FontWeight.bold),
+          titleTextStyle: TextStyle(color: Colors.white, fontSize: 24, fontWeight: FontWeight.bold),
         ),
         bottomNavigationBarTheme: const BottomNavigationBarThemeData(
           backgroundColor: kDarkBackground,
@@ -79,7 +77,10 @@ class _MyAppState extends State<MyApp> {
       darkTheme: ThemeData(
         brightness: Brightness.dark,
         scaffoldBackgroundColor: kDarkBackground,
-        appBarTheme: const AppBarTheme(backgroundColor: kLightBackground),
+        appBarTheme: const AppBarTheme(
+          backgroundColor: kLightBackground,
+          titleTextStyle: TextStyle(color: Colors.white, fontSize: 24, fontWeight: FontWeight.bold),
+        ),
         bottomNavigationBarTheme: const BottomNavigationBarThemeData(
           backgroundColor: kLightBackground,
           selectedItemColor: kPrimaryColor,
@@ -87,19 +88,17 @@ class _MyAppState extends State<MyApp> {
         ),
       ),
       themeMode: _isDarkMode ? ThemeMode.dark : ThemeMode.light,
-      
-     home: HomePage(toggleTheme: _toggleTheme, isDarkMode: _isDarkMode),
-
+      home: HomePage(toggleTheme: _toggleTheme, isDarkMode: _isDarkMode),
       routes: {
-        '/home': (context) => HomePage(toggleTheme: _toggleTheme, isDarkMode: _isDarkMode),  // Passing the flag and toggle method
+        '/home': (context) => HomePage(toggleTheme: _toggleTheme, isDarkMode: _isDarkMode),
         '/login': (context) => const LoginPage(),
         '/signup': (context) => const SignupPage(),
         '/profile': (context) => const ProfilePage(),
         '/post': (context) => PostBookPage(),
         '/inbox': (context) => InboxPage(),
         '/settings': (context) => SettingsPage(
-            isDarkMode: _isDarkMode,
-            toggleTheme: _toggleTheme,
+          isDarkMode: _isDarkMode,
+          toggleTheme: _toggleTheme,
         ),
       },
     );
@@ -109,7 +108,7 @@ class _MyAppState extends State<MyApp> {
 class HomePage extends StatefulWidget {
   final VoidCallback toggleTheme;
   final bool isDarkMode;
-  
+
   const HomePage({super.key, required this.toggleTheme, required this.isDarkMode});
 
   @override
@@ -118,9 +117,20 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   final TextEditingController _searchController = TextEditingController();
-  List<dynamic> _books = [];
+  List<DocumentSnapshot> _books = [];
+  List<DocumentSnapshot> _filteredBooks = [];
   bool _isLoggedIn = false;
   User? _user;
+  final String _filterBy = 'Latest Posted';
+  int _selectedIndex = 0;
+  
+  // Filter state
+  List<String> _allConditions = ['Like New', 'Good', 'Fair', 'Poor'];
+  List<String> _selectedConditions = [];
+  bool _filtersActive = false;
+
+  get kDarkCard => const Color(0xFF2C2C2C);
+  get kLightCard => Colors.white;
 
   @override
   void initState() {
@@ -138,7 +148,18 @@ class _HomePageState extends State<HomePage> {
     });
   }
 
-  // Navigation with authentication check
+  void _onItemTapped(int index) {
+    setState(() {
+      _selectedIndex = index;
+    });
+
+    if (index == 1) {
+      _navigateIfAuthenticated(context, '/post');
+    } else if (index == 2) {
+      _navigateIfAuthenticated(context, '/inbox');
+    }
+  }
+
   void _navigateIfAuthenticated(BuildContext context, String route) {
     if (_user != null) {
       Navigator.pushNamed(context, route);
@@ -150,115 +171,251 @@ class _HomePageState extends State<HomePage> {
     }
   }
 
-  Future<void> _logout() async {
-    await FirebaseAuth.instance.signOut();
-    setState(() {
-      _isLoggedIn = false;
-    });
-    Navigator.of(context).pushNamedAndRemoveUntil('/', (route) => false);
-  }
-
   Future<void> _searchBooks() async {
-  final query = _searchController.text.trim().toLowerCase();
-  if (query.isEmpty) {
-    _loadRecentBooks(); // If search is empty, reload recent books
-    return;
+    final query = _searchController.text.trim().toLowerCase();
+    if (query.isEmpty) {
+      setState(() {
+        _filteredBooks = _books;
+      });
+      return;
+    }
+
+    try {
+      final filteredBooks = _books.where((doc) {
+        final data = doc.data() as Map<String, dynamic>;
+        final title = (data['title'] ?? '').toString().toLowerCase();
+        final author = (data['author'] ?? '').toString().toLowerCase();
+        final isbn = (data['isbn'] ?? '').toString();
+        return title.contains(query) || author.contains(query) || isbn.contains(query);
+      }).toList();
+
+      setState(() {
+        _filteredBooks = filteredBooks;
+      });
+    } catch (e) {
+      print("Error searching books: $e");
+    }
   }
-
-  try {
-    final QuerySnapshot snapshot = await FirebaseFirestore.instance
-        .collection('books')
-        .orderBy('timestamp', descending: true)
-        .get();
-
-    final filteredBooks = snapshot.docs.where((doc) {
-      final data = doc.data() as Map<String, dynamic>;
-      final title = (data['title'] ?? '').toString().toLowerCase();
-      final author = (data['author'] ?? '').toString().toLowerCase();
-      final isbn = (data['isbn'] ?? '').toString(); 
-
-      return title.contains(query) || author.contains(query) || isbn.contains(query);
-    }).toList();
-
-    setState(() {
-      _books = filteredBooks;
-
-    });
-  } catch (e) {
-    print("Error searching books: $e");
-  }
-}
-
 
   Future<void> _loadRecentBooks() async {
-  try {
-    final QuerySnapshot snapshot = await FirebaseFirestore.instance
-        .collection('books')
-        .orderBy('timestamp', descending: true) // Sort by the most recent posts
-        .limit(10) // Optionally limit to the latest 10 books
-        .get();
+    try {
+      final QuerySnapshot snapshot = await FirebaseFirestore.instance
+          .collection('books')
+          .orderBy('timestamp', descending: true)
+          .limit(20)  // Increased limit to show more books
+          .get();
 
-    setState(() {
-      _books = snapshot.docs;
-
-    });
-  } catch (e) {
-    print("Error fetching recent books: $e");
-  }
-}
-
-void _filterBooks() {
-  setState(() {
-    if (_filterBy == 'Latest Posted') {
-      _books.sort((a, b) => (b['timestamp'] as Timestamp).compareTo(a['timestamp'] as Timestamp));
-    } else if (_filterBy == 'Price: Low to High') {
-      _books.sort((a, b) => (a['price'] ?? 0).compareTo(b['price'] ?? 0));
-    } else if (_filterBy == 'Price: High to Low') {
-      _books.sort((a, b) => (b['price'] ?? 0).compareTo(a['price'] ?? 0));
-    } else if (_filterBy == 'Condition: Best to Worst') {
-      _books.sort((a, b) => _conditionRanking(a['condition']).compareTo(_conditionRanking(b['condition'])));
-    } else if (_filterBy == 'Condition: Worst to Best') {
-      _books.sort((a, b) => _conditionRanking(b['condition']).compareTo(_conditionRanking(a['condition'])));
+      setState(() {
+        _books = snapshot.docs;
+        _filteredBooks = snapshot.docs;
+      });
+    } catch (e) {
+      print("Error fetching recent books: $e");
     }
-  });
-}
+  }
+  
+  // Apply filters to the current book collection
+  void _applyFilters() {
+    setState(() {
+      _filteredBooks = _books.where((doc) {
+        final data = doc.data() as Map<String, dynamic>;
+        
+        // Condition filter only
+        final condition = (data['condition'] ?? '').toString();
+        final isConditionSelected = _selectedConditions.isEmpty || 
+                                   _selectedConditions.contains(condition);
+        
+        return isConditionSelected;
+      }).toList();
+      
+      _filtersActive = true;
+    });
+  }
+  
+  // Reset filters and show all books
+  void _resetFilters() {
+    setState(() {
+      _selectedConditions = [];
+      _filteredBooks = _books;
+      _filtersActive = false;
+    });
+  }
+  
+  // Improved filter button
+  Widget _buildFilterButton() {
+    final bool isActive = _filtersActive;
+    
+    return InkWell(
+      onTap: _showFilterDialog,
+      child: AnimatedContainer(
+        duration: const Duration(milliseconds: 200),
+        padding: const EdgeInsets.all(12),
+        decoration: BoxDecoration(
+          color: isActive ? kPrimaryColor : Colors.transparent,
+          borderRadius: BorderRadius.circular(10),
+          border: Border.all(
+            color: isActive ? kPrimaryColor : widget.isDarkMode ? Colors.grey[600]! : Colors.grey[400]!,
+            width: 1.5,
+          ),
+        ),
+        child: Stack(
+          children: [
+            Icon(
+              Icons.filter_list,
+              color: isActive ? Colors.white : (widget.isDarkMode ? Colors.grey[400] : Colors.grey[700]),
+              size: 22,
+            ),
+            if (isActive)
+              Positioned(
+                right: 0,
+                top: 0,
+                child: Container(
+                  width: 8,
+                  height: 8,
+                  decoration: const BoxDecoration(
+                    color: Colors.white,
+                    shape: BoxShape.circle,
+                  ),
+                ),
+              ),
+          ],
+        ),
+      ),
+    );
+  }
+  
+  // Show the filter dialog with only condition filters
+  void _showFilterDialog() {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return StatefulBuilder(
+          builder: (context, setState) {
+            final bool isDarkMode = widget.isDarkMode;
+            final Color backgroundColor = isDarkMode ? kDarkBackground : kLightBackground;
+            final Color textColor = isDarkMode ? kLightText : kDarkText;
+            
+            return AlertDialog(
+              backgroundColor: backgroundColor,
+              title: Text(
+                'Filter Books',
+                style: TextStyle(
+                  color: textColor,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              content: SingleChildScrollView(
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    // Condition filter
+                    Text(
+                      'Condition:',
+                      style: TextStyle(
+                        color: textColor,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    const SizedBox(height: 8),
+                    Wrap(
+                      spacing: 8,
+                      children: _allConditions.map((condition) {
+                        final isSelected = _selectedConditions.contains(condition);
+                        return FilterChip(
+                          label: Text(condition),
+                          selected: isSelected,
+                          selectedColor: kPrimaryColor.withOpacity(0.2),
+                          checkmarkColor: kPrimaryColor,
+                          backgroundColor: backgroundColor,
+                          shape: StadiumBorder(
+                            side: BorderSide(
+                              color: isSelected ? kPrimaryColor : Colors.grey,
+                            ),
+                          ),
+                          onSelected: (bool selected) {
+                            setState(() {
+                              if (selected) {
+                                _selectedConditions.add(condition);
+                              } else {
+                                _selectedConditions.remove(condition);
+                              }
+                            });
+                          },
+                        );
+                      }).toList(),
+                    ),
+                  ],
+                ),
+              ),
+              actions: [
+                TextButton(
+                  child: Text(
+                    'Reset',
+                    style: TextStyle(color: kPrimaryColor),
+                  ),
+                  onPressed: () {
+                    setState(() {
+                      _selectedConditions = [];
+                    });
+                  },
+                ),
+                TextButton(
+                  child: Text(
+                    'Cancel',
+                    style: TextStyle(color: Colors.grey),
+                  ),
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                ),
+                FilledButton(
+                  style: ButtonStyle(
+                    backgroundColor: MaterialStateProperty.all(kPrimaryColor),
+                  ),
+                  child: const Text(
+                    'Apply',
+                    style: TextStyle(color: Colors.white),
+                  ),
+                  onPressed: () {
+                    // Update the main state with current filter values
+                    this._selectedConditions = List.from(_selectedConditions);
+                    
+                    // Close the dialog
+                    Navigator.of(context).pop();
+                    
+                    // Apply the filters
+                    _applyFilters();
+                  },
+                ),
+              ],
+            );
+          },
+        );
+      },
+    );
+  }
 
-int _conditionRanking(String? condition) {
-  const conditionOrder = {
-    'Like New': 1,
-    'Good': 2,
-    'Fair': 3,
-    'Poor': 4
-  };
-  return conditionOrder[condition] ?? 0;
-}
-
-String _filterBy = 'Latest Posted'; // Default filter option
   @override
   Widget build(BuildContext context) {
-    bool darkMode = isDarkMode(context); // Call the utility function
-    final query = _searchController.text.trim().toLowerCase();
     return Scaffold(
-      drawer: _isLoggedIn ? NavBar() : null,
+      drawer: const NavBar(),
       appBar: AppBar(
-      iconTheme: IconThemeData(
-        color: widget.isDarkMode ? kDarkBackground : kLightBackground,
-      ),
-       title: Image.asset('assets/title-text.png'),
+        title: Image.asset('assets/title-text.png', height: 70), // Increased height from 60 to 70
+        centerTitle: true,
         actions: [
           IconButton(
             icon: Icon(widget.isDarkMode ? Icons.wb_sunny : Icons.nightlight_round),
-            color: widget.isDarkMode ? kDarkBackground : kLightBackground,
             onPressed: widget.toggleTheme,
           ),
           if (!_isLoggedIn) ...[
             TextButton(
               onPressed: () => Navigator.pushNamed(context, '/login'),
-              child: Text('Login', style: TextStyle(color: widget.isDarkMode ? kDarkBackground : kLightBackground)),
+              child: const Text('Login', style: TextStyle(color: Colors.white)),
             ),
             TextButton(
               onPressed: () => Navigator.pushNamed(context, '/signup'),
-              child: Text('Sign Up', style: TextStyle(color: widget.isDarkMode ? kDarkBackground : kLightBackground)),
+              child: const Text('Sign Up', style: TextStyle(color: Colors.white)),
             ),
           ],
         ],
@@ -266,155 +423,274 @@ String _filterBy = 'Latest Posted'; // Default filter option
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            TextField(
-              controller: _searchController,
-              decoration: InputDecoration(
-                hintText: "Search for books by title, author, or ISBN",
-                border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
-                suffixIcon: IconButton(
-                  icon: const Icon(Icons.search),
-                  onPressed: _searchBooks,
-                ),
-              ),
-            ),
-            const SizedBox(height: 15),
-
-          if (_books.isNotEmpty && (query ?? '').isNotEmpty)
-          Align(
-            alignment: Alignment.centerLeft,    // ✅ Align to the left
-            child: GestureDetector(
-              onTap: () => showModalBottomSheet(
-                context: context,
-                builder: (context) => Container(
-                  decoration: BoxDecoration(
-                    color: widget.isDarkMode ? kDarkBackground : kLightBackground,
-                    borderRadius: const BorderRadius.only(
-                      topLeft: Radius.circular(16),   // ✅ Rounded corners at the top
-                      topRight: Radius.circular(16),
-                    ),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.black.withOpacity(0.2),
-                        blurRadius: 8,
-                        spreadRadius: 2,
+            // Search and Filter Row
+            Row(
+              children: [
+                // Search Field
+                Expanded(
+                  child: TextField(
+                    controller: _searchController,
+                    decoration: InputDecoration(
+                      hintText: "Search for books",
+                      border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
+                      suffixIcon: IconButton(
+                        icon: const Icon(Icons.search),
+                        onPressed: _searchBooks,
                       ),
-                    ],
+                    ),
                   ),
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      for (var filterOption in [
-                        'Latest Posted',
-                        'Price: Low to High',
-                        'Price: High to Low',
-                        'Condition: Best to Worst',
-                        'Condition: Worst to Best'
-                      ])
-                        ListTile(
-                          title: Text(
-                            filterOption,
-                            style: TextStyle(color: widget.isDarkMode ? kDarkText : kLightText),
-                          ),
-                          onTap: () {
+                ),
+                
+                // Filter Button (updated)
+                const SizedBox(width: 8),
+                _buildFilterButton(),
+              ],
+            ),
+            
+            // Active Filters Chips
+            if (_filtersActive) ...[
+              const SizedBox(height: 12),
+              SingleChildScrollView(
+                scrollDirection: Axis.horizontal,
+                child: Row(
+                  children: [
+                    // Condition Chips
+                    ..._selectedConditions.map((condition) {
+                      return Padding(
+                        padding: const EdgeInsets.only(right: 8),
+                        child: Chip(
+                          label: Text(condition),
+                          deleteIcon: const Icon(Icons.close, size: 18),
+                          onDeleted: () {
                             setState(() {
-                              _filterBy = filterOption;
-                              _filterBooks();
+                              _selectedConditions.remove(condition);
+                              _applyFilters();
                             });
-                            Navigator.pop(context);
                           },
                         ),
-                    ],
-                  ),
+                      );
+                    }).toList(),
+                    
+                    // Clear All Filters
+                    if (_filtersActive) 
+                      TextButton.icon(
+                        icon: const Icon(Icons.clear_all, size: 18),
+                        label: const Text('Clear All'),
+                        onPressed: _resetFilters,
+                      ),
+                  ],
                 ),
               ),
-
-              // 🔥 Compact Container with Border around Icon on the Left
-              child: Container(
-                padding: const EdgeInsets.all(8),  // Compact padding
-                decoration: BoxDecoration(
-                  color: widget.isDarkMode ? kDarkBackground : kLightBackground,
-                  borderRadius: BorderRadius.circular(12),    // ✅ Rounded border
-                  border: Border.all(
-                    color: widget.isDarkMode ? Colors.grey : Colors.black12,  // Light border
-                    width: 1,
-                  ),
+            ],
+            
+            const SizedBox(height: 15),
+            
+            // Results count
+            Align(
+              alignment: Alignment.centerLeft,
+              child: Text(
+                '${_filteredBooks.length} books found',
+                style: TextStyle(
+                  color: widget.isDarkMode ? kLightText : kDarkText,
+                  fontWeight: FontWeight.bold,
                 ),
-                child: 
-                Icon(Icons.sort_rounded, color: widget.isDarkMode ? kDarkText : kLightText),  // ✅ Only the icon inside
               ),
             ),
-          ),
-
-          const SizedBox(height: 10),
-
+            
+            const SizedBox(height: 8),
+            
+            // Books Grid
             Expanded(
-              
-              child: ListView.builder(
-                itemCount: _books.length,
-                itemBuilder: (context, index) {
-                  final book = _books[index];
-                  final bookId = book.id;
-                  final data = book.data() as Map<String, dynamic>;
-                    
-                  final title = book.data()['title'] ?? "Unknown Title";
-                  final author = book.data()['author'] ?? "No author available";
-                  final thumbnail = book.data()['imageUrl'] ?? "https://via.placeholder.com/50";
-                  final price = book.data()['price'];
+              child: _filteredBooks.isEmpty
+                  ? Center(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Icon(Icons.search_off, 
+                              size: 64, 
+                              color: widget.isDarkMode ? Colors.grey[400] : Colors.grey[600]),
+                          const SizedBox(height: 16),
+                          Text(
+                            'No books match your filters',
+                            style: TextStyle(
+                              fontSize: 18,
+                              color: widget.isDarkMode ? Colors.grey[400] : Colors.grey[600],
+                            ),
+                          ),
+                          const SizedBox(height: 8),
+                          TextButton(
+                            onPressed: _resetFilters,
+                            child: const Text('Reset Filters'),
+                          ),
+                        ],
+                      ),
+                    )
+                  : GridView.builder(
+                      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                        crossAxisCount: 2,
+                        mainAxisSpacing: 15,
+                        crossAxisSpacing: 15,
+                        childAspectRatio: 0.6,
+                      ),
+                      itemCount: _filteredBooks.length,
+                      itemBuilder: (context, index) {
+                        final doc = _filteredBooks[index];
+                        final data = doc.data() as Map<String, dynamic>;
 
-                  
-                  
-                  
-                  
-                  return ListTile(
-                    leading: Image.network(thumbnail, width: 50, height: 50, fit: BoxFit.cover),
-                    title: Text(title),
-                    subtitle: Text('$author - \$$price - ${book.data()['condition'] ?? 'Condition not available'}'),
+                        final bookId = doc.id;
+                        final title = data['title'] ?? 'Unknown Title';
+                        final condition = data['condition'] ?? 'Unknown';
+                        // Extract price and format it with currency
+                        final price = data['price'] != null 
+                            ? '\$${data['price'].toString()}' 
+                            : 'Price not listed';
+                            
+                        // Handle image URLs more robustly
+                        String? imageUrl;
+                        // First try the imageUrls field (array of images)
+                        if (data.containsKey('imageUrls') && data['imageUrls'] != null) {
+                          final images = data['imageUrls'];
+                          if (images is List && images.isNotEmpty) {
+                            imageUrl = images[0].toString();
+                          }
+                        }
+                        // If that doesn't work, try imageUrl field (single image)
+                        if ((imageUrl == null || imageUrl.isEmpty) && data.containsKey('imageUrl')) {
+                          imageUrl = data['imageUrl']?.toString();
+                        }
+                        // If that doesn't work, try coverImageUrl field
+                        if ((imageUrl == null || imageUrl.isEmpty) && data.containsKey('coverImageUrl')) {
+                          imageUrl = data['coverImageUrl']?.toString();
+                        }
 
-                    onTap: () {
-                      if (_isLoggedIn) {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => BookDetailsPage(book: book.data() as Map<String, dynamic>, bookId: bookId), // Pass book data
+                        return GestureDetector(
+                          onTap: () {
+                            if (_isLoggedIn) {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => BookDetailsPage(
+                                    book: data,
+                                    bookId: bookId,
+                                  ),
+                                ),
+                              );
+                            } else {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                const SnackBar(
+                                  content: Text("You need to log in to view book details."),
+                                  duration: Duration(seconds: 2),
+                                ),
+                              );
+                            }
+                          },
+                          child: Container(
+                            decoration: BoxDecoration(
+                              color: widget.isDarkMode ? kDarkCard : kLightCard,
+                              borderRadius: BorderRadius.circular(12),
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Colors.black.withOpacity(0.1),
+                                  blurRadius: 8,
+                                  spreadRadius: 2,
+                                ),
+                              ],
+                            ),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                // Image section - takes up most of the space
+                                Expanded(
+                                  flex: 5,
+                                  child: ClipRRect(
+                                    borderRadius: const BorderRadius.vertical(top: Radius.circular(12)),
+                                    child: imageUrl != null && imageUrl.isNotEmpty
+                                      ? FadeInImage.assetNetwork(
+                                          placeholder: 'assets/placeholder.png',
+                                          image: imageUrl,
+                                          fit: BoxFit.cover,
+                                          width: double.infinity,
+                                          height: double.infinity,
+                                          imageErrorBuilder: (context, error, stackTrace) {
+                                            return Container(
+                                              color: Colors.grey[300],
+                                              child: const Center(child: Icon(Icons.broken_image, size: 40)),
+                                            );
+                                          },
+                                        )
+                                      : Container(
+                                          color: Colors.grey[300],
+                                          child: const Center(child: Icon(Icons.book, size: 40)),
+                                        ),
+                                  ),
+                                ),
+                                // Info section below the image
+                                Expanded(
+                                  flex: 3,
+                                  child: Padding(
+                                    padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 4.0),
+                                    child: Column(
+                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      mainAxisAlignment: MainAxisAlignment.start,
+                                      children: [
+                                        // Price in bold
+                                        Text(
+                                          price,
+                                          style: TextStyle(
+                                            fontWeight: FontWeight.bold,
+                                            fontSize: 16,
+                                            color: kPrimaryColor,
+                                          ),
+                                          maxLines: 1,
+                                          overflow: TextOverflow.ellipsis,
+                                        ),
+                                        const SizedBox(height: 2),
+                                        // Title in bold
+                                        Text(
+                                          title,
+                                          style: TextStyle(
+                                            fontWeight: FontWeight.bold,
+                                            fontSize: 13,
+                                            color: widget.isDarkMode ? kDarkText : kLightText,
+                                          ),
+                                          maxLines: 2,
+                                          overflow: TextOverflow.ellipsis,
+                                        ),
+                                        const SizedBox(height: 2),
+                                        // Condition not in bold
+                                        Text(
+                                          condition,
+                                          style: TextStyle(
+                                            fontSize: 12,
+                                            color: widget.isDarkMode ? Colors.grey[300] : Colors.grey[700],
+                                          ),
+                                          maxLines: 1,
+                                          overflow: TextOverflow.ellipsis,
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
                           ),
                         );
-                      } else {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(
-                            content: Text("You need to log in to view book details."),
-                            duration: Duration(seconds: 2),
-                          ),
-                        );
-                      }
-                    },
-
-                  );
-                },
-              ),
+                      },
+                    ),
             ),
           ],
         ),
       ),
       bottomNavigationBar: BottomNavigationBar(
-        backgroundColor: widget.isDarkMode ? kLightBackground : kDarkBackground,
-        selectedItemColor: kPrimaryColor,
-        unselectedItemColor: widget.isDarkMode ? kDarkBackground : kLightBackground,
         items: const [
-          BottomNavigationBarItem(icon: Icon(Icons.home), label: "Home"),
-          BottomNavigationBarItem(icon: Icon(Icons.add), label: "Post"),
-          BottomNavigationBarItem(icon: Icon(Icons.mail), label: "Inbox"),
+          BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
+          BottomNavigationBarItem(icon: Icon(Icons.post_add), label: 'Post'),
+          BottomNavigationBarItem(icon: Icon(Icons.inbox), label: 'Inbox'),
         ],
-        onTap: (index) {
-          if (index == 0) {
-            Navigator.pushNamed(context, '/');
-          } else if (index == 1) {
-            _navigateIfAuthenticated(context, '/post');
-          } else if (index == 2) {
-            _navigateIfAuthenticated(context, '/inbox');
-          }
-        },
+        currentIndex: _selectedIndex,
+        selectedItemColor: kPrimaryColor,
+        onTap: _onItemTapped,
       ),
     );
   }

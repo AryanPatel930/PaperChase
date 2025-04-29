@@ -5,11 +5,12 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:image_picker/image_picker.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_storage/firebase_storage.dart';
+import 'package:permission_handler/permission_handler.dart'; // Add this import
 import 'colors.dart';
-import 'NavBar.dart';
 
 class PostBookPage extends StatefulWidget {
+  const PostBookPage({super.key});
+
   @override
   _PostBookPageState createState() => _PostBookPageState();
 }
@@ -22,62 +23,94 @@ class _PostBookPageState extends State<PostBookPage> {
   final TextEditingController descriptionController = TextEditingController();
   File? _imageFile;
   String _selectedCondition = "Like New";
+  final ImagePicker _picker = ImagePicker(); // Create a single instance
+
+  // Function to request camera permission
+  Future<bool> _requestCameraPermission() async {
+    PermissionStatus status = await Permission.camera.status;
+    if (status.isDenied) {
+      status = await Permission.camera.request();
+    }
+    return status.isGranted;
+  }
 
   // Function to pick an image from camera or gallery
   Future<void> _pickImage(ImageSource source) async {
-  final pickedFile = await ImagePicker().pickImage(source: source);
-  if (pickedFile != null) {
-    setState(() {
-      _imageFile = File(pickedFile.path);
-    });
-    print('Image picked: ${_imageFile!.path}');
-  } else {
-    print('No image selected.');
-  }
-}
-
-Future<String?> fetchBookDescription(String isbn) async {
-  final String url = "https://www.googleapis.com/books/v1/volumes?q=isbn:$isbn";
-
-  try {
-    final response = await http.get(Uri.parse(url));
-    if (response.statusCode == 200) {
-      final data = jsonDecode(response.body);
-      if (data['totalItems'] > 0) {
-        return data['items'][0]['volumeInfo']['description'] ?? 'No description available';
+    try {
+      // Request permission if using camera
+      if (source == ImageSource.camera) {
+        bool hasPermission = await _requestCameraPermission();
+        if (!hasPermission) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('Camera permission is required to take photos'))
+          );
+          return;
+        }
       }
+
+      final XFile? pickedFile = await _picker.pickImage(
+        source: source,
+        imageQuality: 80, // Optimize image quality
+      );
+      
+      if (pickedFile != null) {
+        setState(() {
+          _imageFile = File(pickedFile.path);
+        });
+        print('Image picked: ${_imageFile!.path}');
+      } else {
+        print('No image selected.');
+      }
+    } catch (e) {
+      print('Error picking image: $e');
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Error accessing ${source == ImageSource.camera ? 'camera' : 'gallery'}: $e'))
+      );
     }
-  } catch (e) {
-    print("Error fetching book details: $e");
   }
-  return null; // Return null if no description is found
-}
 
-Future<String?> uploadImageToImgur(File imageFile) async {
-  try {
-    var request = http.MultipartRequest(
-      'POST', Uri.parse('https://api.imgur.com/3/upload')
-    );
+  Future<String?> fetchBookDescription(String isbn) async {
+    final String url = "https://www.googleapis.com/books/v1/volumes?q=isbn:$isbn";
 
-    request.headers['Authorization'] = 'Client-ID 00caf989adf38fa';
+    try {
+      final response = await http.get(Uri.parse(url));
+      if (response.statusCode == 200) {
+        final data = jsonDecode(response.body);
+        if (data['totalItems'] > 0) {
+          return data['items'][0]['volumeInfo']['description'] ?? 'No description available';
+        }
+      }
+    } catch (e) {
+      print("Error fetching book details: $e");
+    }
+    return null; // Return null if no description is found
+  }
 
-    var pic = await http.MultipartFile.fromPath('image', imageFile.path);
-    request.files.add(pic);
+  Future<String?> uploadImageToImgur(File imageFile) async {
+    try {
+      var request = http.MultipartRequest(
+        'POST', Uri.parse('https://api.imgur.com/3/upload')
+      );
 
-    var response = await request.send();
-    if (response.statusCode == 200) {
-      final responseData = await response.stream.bytesToString();
-      final jsonData = json.decode(responseData);
-      return jsonData['data']['link']; // Image URL from Imgur
-    } else {
-      print('Failed to upload image: ${response.reasonPhrase}');
+      request.headers['Authorization'] = 'Client-ID 00caf989adf38fa';
+
+      var pic = await http.MultipartFile.fromPath('image', imageFile.path);
+      request.files.add(pic);
+
+      var response = await request.send();
+      if (response.statusCode == 200) {
+        final responseData = await response.stream.bytesToString();
+        final jsonData = json.decode(responseData);
+        return jsonData['data']['link']; // Image URL from Imgur
+      } else {
+        print('Failed to upload image: ${response.reasonPhrase}');
+        return null;
+      }
+    } catch (e) {
+      print('Error uploading image: $e');
       return null;
     }
-  } catch (e) {
-    print('Error uploading image: $e');
-    return null;
   }
-}
 
   // Function to upload book data to Firebase
   Future<bool> uploadBook() async {
@@ -87,8 +120,28 @@ Future<String?> uploadImageToImgur(File imageFile) async {
 
       String? imageUrl;
       if (_imageFile != null) {
+        // Show loading indicator
+        showDialog(
+          context: context,
+          barrierDismissible: false,
+          builder: (BuildContext context) {
+            return const Center(
+              child: CircularProgressIndicator(),
+            );
+          },
+        );
+        
         imageUrl = await uploadImageToImgur(_imageFile!); 
-        if (imageUrl == null) return false; // Upload and get URL
+        
+        // Hide loading indicator
+        Navigator.of(context).pop();
+        
+        if (imageUrl == null) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('Failed to upload image. Please try again.'))
+          );
+          return false;
+        }
       }
 
       await FirebaseFirestore.instance.collection('books').add({
@@ -98,8 +151,8 @@ Future<String?> uploadImageToImgur(File imageFile) async {
         'price': priceController.text,
         'description': descriptionController.text,
         'condition': _selectedCondition,
-        'userId': user.uid, // 🔹 Save logged-in user's ID
-        'imageUrl': imageUrl ?? "", // Optional image
+        'userId': user.uid,
+        'imageUrl': imageUrl ?? "",
         'timestamp': FieldValue.serverTimestamp(),
       });
       return true;
@@ -111,53 +164,67 @@ Future<String?> uploadImageToImgur(File imageFile) async {
 
   // Function to handle book posting
   Future<void> _postBook() async {
-  if (titleController.text.isEmpty ||
-      priceController.text.isEmpty || isbnController.text.isEmpty ||
-      authorController.text.isEmpty) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text('All fields are required.'))
+    if (titleController.text.isEmpty ||
+        priceController.text.isEmpty || isbnController.text.isEmpty ||
+        authorController.text.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('All fields are required.'))
+      );
+      return;
+    }
+
+    // Show loading indicator while fetching description
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext context) {
+        return const Center(
+          child: CircularProgressIndicator(),
+        );
+      },
     );
-    return;
+
+    String? description = await fetchBookDescription(isbnController.text);
+    descriptionController.text = description ?? 'No description available';
+    
+    // Hide loading indicator
+    Navigator.of(context).pop();
+
+    bool success = await uploadBook();
+    if (success) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Book posted successfully!'))
+      );
+      Navigator.pushReplacementNamed(context, '/profile');
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Failed to post book. Try again.'))
+      );
+    }
   }
-
-  String? description = await fetchBookDescription(isbnController.text);
-  descriptionController.text = description ?? 'No description available';
-
-  bool success = await uploadBook();
-  if (success) {
-    Navigator.pushReplacementNamed(context, '/profile');
-  } else {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text('Failed to post book. Try again.'))
-    );
-  }
-}
-
 
   @override
   Widget build(BuildContext context) {
     final bool isDarkMode = Theme.of(context).brightness == Brightness.dark;
     return Scaffold(
-      drawer: NavBar(),
       appBar: AppBar(
         iconTheme: IconThemeData(
-        color: isDarkMode ? kDarkBackground : kLightBackground,
-      ),
+          color: isDarkMode ? kDarkBackground : kLightBackground,
+        ),
         title: const Text(
           "Post a Book",
           style: TextStyle(
-            fontFamily: 'Impact', // Ensure "Impact" is available in your fonts
-            fontSize: 24, // Adjust size as needed
+            fontFamily: 'Impact',
+            fontSize: 24,
             fontStyle: FontStyle.italic,
             fontWeight: FontWeight.bold,
             color: kPrimaryColor,
           ),
         ),
         foregroundColor: isDarkMode ? kDarkBackground : kLightBackground,
-        
-        ),
+      ),
       body: Padding(
-        padding: EdgeInsets.all(16.0),
+        padding: const EdgeInsets.all(16.0),
         child: SingleChildScrollView(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -165,34 +232,32 @@ Future<String?> uploadImageToImgur(File imageFile) async {
               // Title Input
               TextField(
                 controller: titleController,
-                decoration: InputDecoration(labelText: 'Title'),
+                decoration: const InputDecoration(labelText: 'Title'),
               ),
-              SizedBox(height: 10),
-
-              
+              const SizedBox(height: 10),
 
               // Price Input
               TextField(
                 controller: priceController,
-                decoration: InputDecoration(labelText: 'Price'),
+                decoration: const InputDecoration(labelText: 'Price'),
                 keyboardType: TextInputType.number,
               ),
-              SizedBox(height: 10),
+              const SizedBox(height: 10),
 
               // ISBN Input
               TextField(
                 controller: isbnController,
-                decoration: InputDecoration(labelText: 'ISBN Number'),
+                decoration: const InputDecoration(labelText: 'ISBN Number'),
                 keyboardType: TextInputType.number,
               ),
-              SizedBox(height: 10),
+              const SizedBox(height: 10),
 
               // Author Input
               TextField(
                 controller: authorController,
-                decoration: InputDecoration(labelText: 'Author'),
+                decoration: const InputDecoration(labelText: 'Author'),
               ),
-              SizedBox(height: 10),
+              const SizedBox(height: 10),
 
               DropdownButtonFormField<String>(
                 value: _selectedCondition,
@@ -207,17 +272,16 @@ Future<String?> uploadImageToImgur(File imageFile) async {
                     _selectedCondition = value!;
                   });
                 },
-                // Set the dropdown color
                 dropdownColor: isDarkMode ? kDarkBackground : kLightBackground, 
                 decoration: InputDecoration(
                   labelText: 'Condition',
                   filled: true,
-                  fillColor: isDarkMode ? kDarkBackground : kLightBackground,  // Match scaffold color
-                  contentPadding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+                  fillColor: isDarkMode ? kDarkBackground : kLightBackground,
+                  contentPadding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
                 ),
               ),
 
-              SizedBox(height: 50),
+              const SizedBox(height: 50),
               // Image Picker Buttons
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -225,56 +289,76 @@ Future<String?> uploadImageToImgur(File imageFile) async {
                   ElevatedButton.icon(
                     onPressed: () => _pickImage(ImageSource.camera),
                     icon: Icon(Icons.camera, color: isDarkMode ? kLightText: kDarkText),
-                    label: Text('Camera'),
+                    label: const Text('Camera'),
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: isDarkMode ? kLightBackground : kDarkBackground, // Background color
-                      foregroundColor: isDarkMode ? kDarkBackground : kLightBackground, // Text color
-                      padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 15), // Padding
+                      backgroundColor: isDarkMode ? kLightBackground : kDarkBackground,
+                      foregroundColor: isDarkMode ? kDarkBackground : kLightBackground,
+                      padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 15),
                       shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10), // Rounded corners
+                        borderRadius: BorderRadius.circular(10),
                       ),
                     ),
                   ),
-                  SizedBox(width: 20),
+                  const SizedBox(width: 20),
                   ElevatedButton.icon(
                     onPressed: () => _pickImage(ImageSource.gallery),
-                    icon: Icon(Icons.photo_library,color: isDarkMode ? kLightText: kDarkText),
-                    label: Text('Gallery'),
+                    icon: Icon(Icons.photo_library, color: isDarkMode ? kLightText: kDarkText),
+                    label: const Text('Gallery'),
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: isDarkMode ? kLightBackground : kDarkBackground, // Background color
-                      foregroundColor: isDarkMode ? kDarkBackground : kLightBackground, // Text color
-                      padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 15), // Padding
+                      backgroundColor: isDarkMode ? kLightBackground : kDarkBackground,
+                      foregroundColor: isDarkMode ? kDarkBackground : kLightBackground,
+                      padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 15),
                       shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10), // Rounded corners
+                        borderRadius: BorderRadius.circular(10),
                       ),
                     ),
                   ),
                 ],
               ),
-              SizedBox(height: 10),
+              const SizedBox(height: 20),
 
               // Display Selected Image
-              if (_imageFile != null)
+              if (_imageFile != null) ...[
                 Container(
-                  height: 150,
+                  height: 200,
                   width: double.infinity,
-                  child: Image.file(_imageFile!, fit: BoxFit.cover),
+                  decoration: BoxDecoration(
+                    border: Border.all(color: Colors.grey),
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(8),
+                    child: Image.file(_imageFile!, fit: BoxFit.cover),
+                  ),
                 ),
-              SizedBox(height: 20),
+                const SizedBox(height: 10),
+                Center(
+                  child: TextButton.icon(
+                    onPressed: () {
+                      setState(() {
+                        _imageFile = null;
+                      });
+                    },
+                    icon: const Icon(Icons.delete, color: Colors.red),
+                    label: const Text('Remove Image', style: TextStyle(color: Colors.red)),
+                  ),
+                ),
+              ],
+              const SizedBox(height: 20),
 
               // Post Book Button
               Center(
                 child: ElevatedButton(
                   onPressed: _postBook,
-                  child: Text('Post Book'),
                   style: ElevatedButton.styleFrom(
-                      backgroundColor: isDarkMode ? kLightBackground : kDarkBackground, // Background color
-                      foregroundColor: isDarkMode ? kDarkBackground : kLightBackground, // Text color
-                      padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 15), // Padding
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10), // Rounded corners
-                      ),
+                    backgroundColor: isDarkMode ? kLightBackground : kDarkBackground,
+                    foregroundColor: isDarkMode ? kDarkBackground : kLightBackground,
+                    padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 15),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10),
+                    ),
                   ),
+                  child: const Text('Post Book'),
                 ),
               ),
             ],
@@ -297,7 +381,7 @@ Future<String?> uploadImageToImgur(File imageFile) async {
           } else if (index == 1) {
             Navigator.pushNamed(context, '/post');
           } else if (index == 2) {
-            Navigator.pushNamed(context, '/inbox'); // Stay on the same page
+            Navigator.pushNamed(context, '/inbox');
           }
         },
       ),

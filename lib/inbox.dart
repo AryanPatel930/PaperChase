@@ -1,10 +1,16 @@
 import 'package:flutter/material.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:paperchase_app/NavBar.dart';
-import 'package:paperchase_app/chat_page.dart';
-import 'package:paperchase_app/colors.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/foundation.dart' show kDebugMode;
+import 'colors.dart';
+import 'NavBar.dart';
+import 'chat_page.dart';
 
+enum BookFilter {
+  all,
+  sold,
+  bought,
+}
 
 class InboxPage extends StatefulWidget {
   const InboxPage({super.key});
@@ -14,10 +20,33 @@ class InboxPage extends StatefulWidget {
 }
 
 class _InboxPageState extends State<InboxPage> {
+  BookFilter _currentFilter = BookFilter.all;
+
+  String _getFilterName(BookFilter filter) {
+    switch (filter) {
+      case BookFilter.all:
+        return 'All Books';
+      case BookFilter.sold:
+        return 'Sold Books';
+      case BookFilter.bought:
+        return 'Bought Books';
+    }
+  }
+
   Query<Map<String, dynamic>> _getFilteredQuery(String userId) {
-    return FirebaseFirestore.instance
-        .collection('chats')
-        .where('users', arrayContains: userId);
+    final baseQuery = FirebaseFirestore.instance.collection('chats');
+    switch (_currentFilter) {
+      case BookFilter.all:
+        return baseQuery.where('users', arrayContains: userId);
+      case BookFilter.sold:
+        return baseQuery
+            .where('users', arrayContains: userId)
+            .where('sellerId', isEqualTo: userId);
+      case BookFilter.bought:
+        return baseQuery
+            .where('users', arrayContains: userId)
+            .where('buyerId', isEqualTo: userId);
+    }
   }
 
   @override
@@ -32,7 +61,9 @@ class _InboxPageState extends State<InboxPage> {
     if (currentUser == null) {
       return Scaffold(
         appBar: AppBar(
-          iconTheme: IconThemeData(color: textColor),
+          iconTheme: IconThemeData(
+            color: isDarkMode ? kDarkBackground : kLightBackground,
+          ),
           title: const Text(
             "Inbox",
             style: TextStyle(
@@ -43,7 +74,7 @@ class _InboxPageState extends State<InboxPage> {
               color: kPrimaryColor,
             ),
           ),
-          backgroundColor: scaffoldColor,
+          foregroundColor: isDarkMode ? kLightBackground : kDarkBackground,
         ),
         drawer: const NavBar(),
         body: Container(
@@ -71,21 +102,75 @@ class _InboxPageState extends State<InboxPage> {
             ),
           ),
         ),
-        bottomNavigationBar: _buildBottomNavigationBar(isDarkMode, textColor2),
+        bottomNavigationBar: BottomNavigationBar(
+          backgroundColor: isDarkMode ? kLightBackground : kDarkBackground,
+          selectedItemColor: kPrimaryColor,
+          unselectedItemColor: isDarkMode ? kDarkBackground : kLightBackground,
+          currentIndex: 1,
+          items: const [
+            BottomNavigationBarItem(icon: Icon(Icons.home), label: "Home"),
+            BottomNavigationBarItem(icon: Icon(Icons.add), label: "Post"),
+            BottomNavigationBarItem(icon: Icon(Icons.mail), label: "Inbox"),
+          ],
+          onTap: (index) {
+            if (index == 0) {
+              Navigator.pushNamedAndRemoveUntil(context, '/', (route) => false);
+            } else if (index == 1) {
+              Navigator.pushNamed(context, '/post');
+            } else if (index == 2) {
+              Navigator.pushNamed(context, '/inbox');
+            }
+          },
+        ),
       );
     }
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text(
-          'Inbox',
-          style: TextStyle(
-            fontFamily: 'Impact',
-            fontSize: 24,
-            fontStyle: FontStyle.italic,
-            fontWeight: FontWeight.bold,
-            color: kPrimaryColor,
-          ),
+        title: Row(
+          children: [
+            const Text(
+              'Inbox',
+              style: TextStyle(
+                fontFamily: 'Impact',
+                fontSize: 24,
+                fontStyle: FontStyle.italic,
+                fontWeight: FontWeight.bold,
+                color: kPrimaryColor,
+              ),
+            ),
+            const SizedBox(width: 16),
+            Expanded(
+              child: Container(
+                padding: const EdgeInsets.symmetric(horizontal: 12),
+                decoration: BoxDecoration(
+                  color: isDarkMode ? Colors.grey[800] : Colors.grey[200],
+                  borderRadius: BorderRadius.circular(20),
+                ),
+                child: DropdownButtonHideUnderline(
+                  child: DropdownButton<BookFilter>(
+                    value: _currentFilter,
+                    icon: Icon(Icons.arrow_drop_down, color: textColor),
+                    style: TextStyle(color: textColor, fontSize: 14),
+                    dropdownColor: isDarkMode ? Colors.grey[800] : Colors.grey[200],
+                    items: BookFilter.values.map((filter) {
+                      return DropdownMenuItem<BookFilter>(
+                        value: filter,
+                        child: Text(_getFilterName(filter)),
+                      );
+                    }).toList(),
+                    onChanged: (BookFilter? newValue) {
+                      if (newValue != null) {
+                        setState(() {
+                          _currentFilter = newValue;
+                        });
+                      }
+                    },
+                  ),
+                ),
+              ),
+            ),
+          ],
         ),
         backgroundColor: scaffoldColor,
         iconTheme: IconThemeData(color: textColor2),
@@ -98,7 +183,26 @@ class _InboxPageState extends State<InboxPage> {
               .orderBy('lastMessageTime', descending: true)
               .snapshots(),
           builder: (context, snapshot) {
+            if (kDebugMode) {
+              print('Current user ID in Inbox: ${currentUser.uid}');
+              print('Current filter: ${_getFilterName(_currentFilter)}');
+              print('Stream connection state: ${snapshot.connectionState}');
+              if (snapshot.hasError) {
+                print('Stream error: ${snapshot.error}');
+                print('Error stack trace: ${snapshot.stackTrace}');
+              }
+            }
+            
             if (snapshot.hasError) {
+              final error = snapshot.error.toString();
+              if (error.contains('failed-precondition') || error.contains('requires an index')) {
+                return StreamBuilder<QuerySnapshot>(
+                  stream: _getFilteredQuery(currentUser.uid).snapshots(),
+                  builder: (context, simpleSnapshot) {
+                    return _buildChatList(simpleSnapshot, currentUser, isDarkMode, textColor);
+                  },
+                );
+              }
               return Center(
                 child: Text(
                   'Error loading conversations: ${snapshot.error}',
@@ -106,22 +210,39 @@ class _InboxPageState extends State<InboxPage> {
                 ),
               );
             }
-
+            
             if (snapshot.connectionState == ConnectionState.waiting) {
               return const Center(child: CircularProgressIndicator());
             }
-
+            
             return _buildChatList(snapshot, currentUser, isDarkMode, textColor);
           },
         ),
       ),
-      bottomNavigationBar: _buildBottomNavigationBar(isDarkMode, textColor2),
+      bottomNavigationBar: BottomNavigationBar(
+        backgroundColor: scaffoldColor,
+        selectedItemColor: kPrimaryColor,
+        unselectedItemColor: textColor2,
+        currentIndex: 2,
+        items: const [
+          BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
+          BottomNavigationBarItem(icon: Icon(Icons.add), label: 'Post'),
+          BottomNavigationBarItem(icon: Icon(Icons.mail), label: 'Inbox'),
+        ],
+        onTap: (index) {
+          if (index == 0) {
+            Navigator.pushReplacementNamed(context, '/');
+          } else if (index == 1) {
+            Navigator.pushReplacementNamed(context, '/post');
+          }
+        },
+      ),
     );
   }
 
   Widget _buildChatList(AsyncSnapshot<QuerySnapshot> snapshot, User currentUser, bool isDarkMode, Color textColor) {
     final chats = snapshot.data?.docs ?? [];
-
+    
     if (chats.isEmpty) {
       return Center(
         child: Column(
@@ -129,9 +250,22 @@ class _InboxPageState extends State<InboxPage> {
           children: [
             Icon(Icons.chat_bubble_outline, size: 64, color: textColor.withOpacity(0.5)),
             const SizedBox(height: 16),
-            const Text('No conversations yet'),
+            Text(
+              _currentFilter == BookFilter.all
+                  ? 'No conversations yet'
+                  : _currentFilter == BookFilter.sold
+                      ? 'No sold books conversations'
+                      : 'No bought books conversations',
+              style: TextStyle(fontSize: 18, color: textColor.withOpacity(0.7)),
+            ),
             const SizedBox(height: 8),
-            const Text('Browse books and contact sellers to start chatting'),
+            Text(
+              _currentFilter == BookFilter.all
+                  ? 'Browse books and contact sellers to start chatting'
+                  : 'No messages found for this filter',
+              style: TextStyle(fontSize: 14, color: textColor.withOpacity(0.5)),
+              textAlign: TextAlign.center,
+            ),
           ],
         ),
       );
@@ -152,16 +286,29 @@ class _InboxPageState extends State<InboxPage> {
       itemBuilder: (context, index) {
         final chat = sortedChats[index];
         final data = chat.data() as Map<String, dynamic>;
-        final chatId = chat.id;
-        // We'll determine real seller in FutureBuilder
-        final bookId = data['bookId'] as String? ?? '';
+        
+        if (kDebugMode) {
+          print('Chat data: $data');
+        }
+        
         final lastMessage = data['lastMessage'] as String?;
         final lastMessageTime = (data['lastMessageTime'] as Timestamp?)?.toDate();
         final bookTitle = data['bookTitle'] as String?;
         final usersList = (data['users'] as List?)?.cast<String>() ?? [];
-
-        String otherUserId = usersList.firstWhere((id) => id != currentUser.uid, orElse: () => 'unknown');
-
+        
+        String otherUserId;
+        try {
+          otherUserId = usersList.firstWhere(
+            (id) => id != currentUser.uid,
+            orElse: () => 'unknown',
+          );
+        } catch (e) {
+          if (kDebugMode) {
+            print('Error finding other user: $e');
+          }
+          otherUserId = 'unknown';
+        }
+        
         return FutureBuilder<DocumentSnapshot>(
           future: FirebaseFirestore.instance.collection('users').doc(otherUserId).get(),
           builder: (context, userSnapshot) {
@@ -171,181 +318,82 @@ class _InboxPageState extends State<InboxPage> {
               userName = '${userData['first_name'] ?? ''} ${userData['last_name'] ?? ''}'.trim();
               if (userName.isEmpty) userName = 'Unknown User';
             }
-
-            return FutureBuilder<QuerySnapshot>(
-              future: FirebaseFirestore.instance
-                  .collection('chats')
-                  .doc(chatId)
-                  .collection('messages')
-                  .orderBy('timestamp', descending: false)
-                  .limit(1)
-                  .get(),
-              builder: (context, messagesSnapshot) {
-                String sellerId = '';
-                String buyerId = '';
-                
-                // Check who sent first message to determine buyer
-                if (messagesSnapshot.hasData && messagesSnapshot.data!.docs.isNotEmpty) {
-                  final firstMessage = messagesSnapshot.data!.docs.first;
-                  final firstMessageData = firstMessage.data() as Map<String, dynamic>;
-                  buyerId = firstMessageData['senderId'] as String? ?? '';
-                  
-                  // If buyer is first message sender, seller is the other user
-                  sellerId = usersList.firstWhere((id) => id != buyerId, orElse: () => '');
-                } else {
-                  // If no messages yet, use any seller ID from data if available
-                  sellerId = data['sellerId'] as String? ?? '';
-                  
-                  // If seller ID still not available, default to book owner from books collection
-                  if (sellerId.isEmpty && bookId.isNotEmpty) {
-                    // This will be handled later in the next FutureBuilder
-                  }
-                }
-
-                // Return placeholder while loading book data if necessary
-                if (sellerId.isEmpty && bookId.isNotEmpty) {
-                  return FutureBuilder<DocumentSnapshot>(
-                    future: FirebaseFirestore.instance.collection('books').doc(bookId).get(),
-                    builder: (context, bookSnapshot) {
-                      if (bookSnapshot.hasData && bookSnapshot.data!.exists) {
-                        final bookData = bookSnapshot.data!.data() as Map<String, dynamic>? ?? {};
-                        sellerId = bookData['userId'] as String? ?? '';
-                      }
-                      
-                      // Now build the actual chat list item
-                      return _buildChatListItem(
-                        context,
-                        chatId,
-                        userName,
-                        currentUser.uid,
-                        sellerId,
-                        bookTitle,
-                        lastMessage,
-                        lastMessageTime,
-                        isDarkMode,
-                        textColor,
-                      );
-                    },
+            
+            return Card(
+              margin: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+              color: isDarkMode ? Colors.grey[900] : Colors.white,
+              child: ListTile(
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => StrictChatPage(
+                        chatId: chat.id,
+                        otherUserName: userName,
+                        predefinedMessages: const [
+                          "Is this still available?",
+                          "When can we meet?",
+                          "I'll take it",
+                          "Thanks!",
+                          "Hello",
+                          "Can you hold it for me?",
+                          "What's your lowest price?",
+                        ],
+                      ),
+                    ),
                   );
-                }
-
-                return _buildChatListItem(
-                  context,
-                  chatId,
+                },
+                leading: CircleAvatar(
+                  backgroundColor: isDarkMode ? Colors.grey[800] : Colors.grey[200],
+                  child: Text(
+                    userName[0].toUpperCase(),
+                    style: TextStyle(
+                      color: textColor,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
+                title: Text(
                   userName,
-                  currentUser.uid,
-                  sellerId,
-                  bookTitle,
-                  lastMessage,
-                  lastMessageTime,
-                  isDarkMode,
-                  textColor,
-                );
-              },
+                  style: TextStyle(
+                    color: textColor,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                subtitle: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    if (bookTitle != null)
+                      Text(
+                        'Re: $bookTitle',
+                        style: TextStyle(
+                          color: textColor.withOpacity(0.7),
+                          fontSize: 12,
+                        ),
+                      ),
+                    Text(
+                      lastMessage ?? 'No messages yet',
+                      style: TextStyle(
+                        color: textColor.withOpacity(0.7),
+                      ),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                  ],
+                ),
+                trailing: lastMessageTime != null
+                    ? Text(
+                        _formatTimestamp(lastMessageTime),
+                        style: TextStyle(
+                          color: textColor.withOpacity(0.5),
+                          fontSize: 12,
+                        ),
+                      )
+                    : null,
+              ),
             );
           },
         );
-      },
-    );
-  }
-
-  Widget _buildChatListItem(
-    BuildContext context,
-    String chatId,
-    String userName,
-    String currentUserId,
-    String sellerId,
-    String? bookTitle,
-    String? lastMessage,
-    DateTime? lastMessageTime,
-    bool isDarkMode,
-    Color textColor,
-  ) {
-    return Card(
-      margin: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-      color: isDarkMode ? Colors.grey[900] : Colors.white,
-      child: ListTile(
-        onTap: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => StrictChatPage(
-                chatId: chatId,
-                otherUserName: userName,
-                currentUserId: currentUserId,
-                sellerId: sellerId,
-              ),
-            ),
-          );
-        },
-        leading: CircleAvatar(
-          backgroundColor: isDarkMode ? Colors.grey[800] : Colors.grey[200],
-          child: Text(
-            userName.isNotEmpty ? userName[0].toUpperCase() : '?',
-            style: TextStyle(
-              color: textColor,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-        ),
-        title: Text(
-          userName,
-          style: TextStyle(
-            color: textColor,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
-        subtitle: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            if (bookTitle != null)
-              Text(
-                'Re: $bookTitle',
-                style: TextStyle(
-                  color: textColor.withOpacity(0.7),
-                  fontSize: 12,
-                ),
-              ),
-            Text(
-              lastMessage ?? 'No messages yet',
-              style: TextStyle(
-                color: textColor.withOpacity(0.7),
-              ),
-              maxLines: 1,
-              overflow: TextOverflow.ellipsis,
-            ),
-          ],
-        ),
-        trailing: lastMessageTime != null
-            ? Text(
-                _formatTimestamp(lastMessageTime),
-                style: TextStyle(
-                  color: textColor.withOpacity(0.5),
-                  fontSize: 12,
-                ),
-              )
-            : null,
-      ),
-    );
-  }
-
-  BottomNavigationBar _buildBottomNavigationBar(bool isDarkMode, Color textColor2) {
-    return BottomNavigationBar(
-      backgroundColor: isDarkMode ? kLightBackground : kDarkBackground,
-      selectedItemColor: kPrimaryColor,
-      unselectedItemColor: textColor2,
-      currentIndex: 2,
-      items: const [
-        BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
-        BottomNavigationBarItem(icon: Icon(Icons.add), label: 'Post'),
-        BottomNavigationBarItem(icon: Icon(Icons.mail), label: 'Inbox'),
-      ],
-      onTap: (index) {
-        if (index == 0) {
-          Navigator.pushReplacementNamed(context, '/');
-        } else if (index == 1) {
-          Navigator.pushReplacementNamed(context, '/post');
-        }
       },
     );
   }

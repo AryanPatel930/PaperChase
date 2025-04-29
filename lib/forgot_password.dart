@@ -3,6 +3,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'colors.dart';
 
 class ForgotPasswordPage extends StatefulWidget {
+  const ForgotPasswordPage({super.key});
+
   @override
   _ForgotPasswordPageState createState() => _ForgotPasswordPageState();
 }
@@ -67,7 +69,6 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
             SizedBox(height: 20),
             ElevatedButton(
               onPressed: _resetPassword,
-              child: Text("Reset Password"),
               style: ElevatedButton.styleFrom(
                       backgroundColor: isDarkMode ? kLightBackground : kDarkBackground, // Background color
                       foregroundColor: isDarkMode ? kDarkBackground : kLightBackground, // Text color
@@ -76,6 +77,7 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
                         borderRadius: BorderRadius.circular(10), // Rounded corners
                       ),
               ),
+              child: Text("Reset Password"),
             ),
           ],
         ),

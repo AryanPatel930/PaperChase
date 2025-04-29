@@ -97,7 +97,7 @@ class _LoginPageState extends State<LoginPage> {
               _isLoading
                   ? const CircularProgressIndicator()
                   : ElevatedButton(
-                    onPressed: _login, child: const Text('Login'),
+                    onPressed: _login,
                     style: ElevatedButton.styleFrom(
                       backgroundColor: isDarkMode ? kLightBackground : kDarkBackground, // Background color
                       foregroundColor: isDarkMode ? kDarkBackground : kLightBackground, // Text color
@@ -105,7 +105,7 @@ class _LoginPageState extends State<LoginPage> {
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(10), // Rounded corners
                       ),
-                    ),
+                    ), child: const Text('Login'),
                   ),
               TextButton(
                 style: TextButton.styleFrom(
